@@ -29,8 +29,11 @@ namespace Geo.Rest.Controllers
         public async Task<IActionResult> GetCountriesAsync([FromQuery] CountryCollectionQueryParameters parameters)
         {
             var countries = await this._geoService.GetCountriesAsync(parameters);
-                        
-            return this.Ok(countries.SelectFields(parameters.Fields));
+
+            var dynamicCountries = countries.SelectFields(parameters.Fields);
+
+
+            return this.Ok(dynamicCountries);
         }
 
         //[HttpGet("countries/{id:int}")]
