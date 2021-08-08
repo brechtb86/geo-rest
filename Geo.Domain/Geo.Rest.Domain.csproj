@@ -5,14 +5,18 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Projects\geo-rest\Geo.Domain\Geo.Domain.xml</DocumentationFile>
+    <DocumentationFile>C:\Projects\geo-rest\Geo.Domain\Geo.Rest.Domain.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Projects\geo-rest\Geo.Domain\Geo.Domain.xml</DocumentationFile>
+    <DocumentationFile>C:\Projects\geo-rest\Geo.Domain\Geo.Rest.Domain.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Geo.Rest.Domain.xml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
