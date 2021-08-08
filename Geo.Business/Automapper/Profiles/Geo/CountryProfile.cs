@@ -34,6 +34,11 @@ namespace Geo.Rest.Business.Automapper.Profiles.Geo
         {
             var language = context.Items["language"]?.ToString().ToLower();
 
+            if(string.IsNullOrEmpty(language))
+            {
+                return null;
+            }
+
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(sourceMember.Replace("\\", "")).GetValueOrDefault(language);
         }
     }

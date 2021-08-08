@@ -75,6 +75,8 @@ namespace Geo.Rest
                     c.IncludeXmlComments(xmlDocumentFile);
                 }
             });
+
+            services.AddMvcCore();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +93,8 @@ namespace Geo.Rest
 
             app.UseStaticFiles();
 
+            app.UseHsts();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -100,7 +104,7 @@ namespace Geo.Rest
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
+            });            
         }
     }
 }
