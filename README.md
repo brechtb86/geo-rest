@@ -2,7 +2,7 @@
 
 ## Warning
 
-This service is stil under development.
+This service is stil under development, this service should in no way be used in production!
 
 ## Docs
 
