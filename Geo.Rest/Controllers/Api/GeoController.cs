@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Geo.Rest.Business.Extensions;
 
-namespace Geo.Rest.Controllers
+namespace Geo.Rest.Controllers.Api
 {
     [ApiVersion("1.0")]
     [ApiController]
@@ -19,7 +19,7 @@ namespace Geo.Rest.Controllers
 
         public GeoController(IGeoService geoService)
         {
-            this._geoService = geoService;
+            _geoService = geoService;
         }
 
         [HttpGet("countries")]
@@ -28,12 +28,12 @@ namespace Geo.Rest.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetCountriesAsync([FromQuery] CountryCollectionQueryParameters parameters)
         {
-            var countries = await this._geoService.GetCountriesAsync(parameters);
+            var countries = await _geoService.GetCountriesAsync(parameters);
 
             var dynamicCountries = countries.SelectFields(parameters.Fields);
 
 
-            return this.Ok(dynamicCountries);
+            return Ok(dynamicCountries);
         }
 
         [HttpGet("countries/{countryId:int}")]
@@ -42,11 +42,11 @@ namespace Geo.Rest.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetCountryByIdAsync(int countryId, [FromQuery] CountryItemQueryParameters parameters)
         {
-            var country = await this._geoService.GetCountryByIdAsync(countryId, parameters);
+            var country = await _geoService.GetCountryByIdAsync(countryId, parameters);
 
             var dynamicCountry = country.SelectFields(parameters.Fields);
 
-            return this.Ok(dynamicCountry);
+            return Ok(dynamicCountry);
         }
 
         //[HttpGet("states")]
