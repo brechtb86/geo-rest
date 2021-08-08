@@ -4,6 +4,10 @@
 
 This service is stil under development, this service should in no way be used in production!
 
+## Endpoints
+
+v1: https://geolocation.rest/api/v1/
+
 ## Docs
 
 For documentation and tryout go to the [Swagger page](https://geolocation.rest/swagger/index.html).
