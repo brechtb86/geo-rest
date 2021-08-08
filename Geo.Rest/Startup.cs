@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -65,7 +66,17 @@ namespace Geo.Rest
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "geolocation.rest", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "geolocation.rest",
+                    Version = "v1",
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Brecht Baekelandt",
+                        Email = "brecht@geolocation.rest",
+                        Url = new Uri("https://geolocation.rest")
+                    }
+                });
 
                 c.DescribeAllParametersInCamelCase();
 
@@ -84,7 +95,7 @@ namespace Geo.Rest
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 });
 
-          
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -111,7 +122,7 @@ namespace Geo.Rest
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}"); 
+                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllers();
             });
         }

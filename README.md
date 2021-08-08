@@ -11,3 +11,7 @@ For documentation and tryout go to the [Swagger page](https://geolocation.rest/s
 ## A big thanks!
 
 This service is using the data from [dr5hn](https://github.com/dr5hn/countries-states-cities-database), shoutout to him for making and maintining such a great database!
+
+## Contact
+
+I have set up a mailbox at [brecht@geolocation.rest](mailto:[brecht@geolocation.rest)
