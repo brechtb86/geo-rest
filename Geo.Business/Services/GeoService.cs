@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Geo.Business.Services.Interfaces;
-using Geo.Data.Contexts;
-using Geo.Data.Extensions;
-using Geo.Domain.Models.Geo;
-using Geo.Domain.Models.Query;
+using Geo.Rest.Business.Services.Interfaces;
+using Geo.Rest.Data.Contexts;
+using Geo.Rest.Data.Extensions;
+using Geo.Rest.Domain.Models.Geo;
+using Geo.Rest.Domain.Models.Query;
 
-using Geo.Domain.Shared;
+using Geo.Rest.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Business.Services
+namespace Geo.Rest.Business.Services
 {
     public class GeoService : IGeoService
     {

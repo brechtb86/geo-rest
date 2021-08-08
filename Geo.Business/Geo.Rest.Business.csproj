@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Geo.Data\Geo.Data.csproj" />
-    <ProjectReference Include="..\Geo.Domain\Geo.Domain.csproj" />
+    <ProjectReference Include="..\Geo.Data\Geo.Rest.Data.csproj" />
+    <ProjectReference Include="..\Geo.Domain\Geo.Rest.Domain.csproj" />
   </ItemGroup>
 
 </Project>

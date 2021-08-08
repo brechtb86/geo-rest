@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Business.Automapper.Profiles.Geo
+namespace Geo.Rest.Business.Automapper.Profiles.Geo
 {
     public class StateProfile : Profile
     {

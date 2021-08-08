@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Domain.Models.Query
+namespace Geo.Rest.Domain.Models.Query
 {
     public class ItemQueryParameters
     {

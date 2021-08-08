@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Geo.Data.Entities.Geo;
+using Geo.Rest.Data.Entities.Geo;
 
 #nullable disable
 
-namespace Geo.Data.Contexts
+namespace Geo.Rest.Data.Contexts
 {
     public partial class GeoContext : DbContext
     {

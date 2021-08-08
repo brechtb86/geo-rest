@@ -1,7 +1,7 @@
-﻿using Geo.Business.Services.Interfaces;
-using Geo.Domain.Models.Geo;
-using Geo.Domain.Models.Query;
-using Geo.Domain.Shared;
+﻿using Geo.Rest.Business.Services.Interfaces;
+using Geo.Rest.Domain.Models.Geo;
+using Geo.Rest.Domain.Models.Query;
+using Geo.Rest.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

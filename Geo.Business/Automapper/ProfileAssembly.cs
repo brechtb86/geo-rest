@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Business.Automapper
+namespace Geo.Rest.Business.Automapper
 {
     public class ProfileAssembly
     {

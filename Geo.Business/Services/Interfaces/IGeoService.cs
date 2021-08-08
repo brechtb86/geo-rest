@@ -1,13 +1,13 @@
-﻿using Geo.Domain.Models.Geo;
-using Geo.Domain.Models.Query;
-using Geo.Domain.Shared;
+﻿using Geo.Rest.Domain.Models.Geo;
+using Geo.Rest.Domain.Models.Query;
+using Geo.Rest.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Business.Services.Interfaces
+namespace Geo.Rest.Business.Services.Interfaces
 {
     public interface IGeoService
     {

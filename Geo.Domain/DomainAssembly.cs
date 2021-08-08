@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Domain
+namespace Geo.Rest.Domain
 {
     public class DomainAssembly
     {

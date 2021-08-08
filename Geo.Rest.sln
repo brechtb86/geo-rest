@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.31507.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Rest", "Geo.Rest\Geo.Rest.csproj", "{2E1B03C2-4B59-42E2-B435-EDCCCCEFB7C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Data", "Geo.Data\Geo.Data.csproj", "{8595EDC4-7A1C-4BF6-9742-E9E657A07FD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Rest.Data", "Geo.Data\Geo.Rest.Data.csproj", "{8595EDC4-7A1C-4BF6-9742-E9E657A07FD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Domain", "Geo.Domain\Geo.Domain.csproj", "{380B38D5-DBD7-408C-B44D-A51529CE6C25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Rest.Domain", "Geo.Domain\Geo.Rest.Domain.csproj", "{380B38D5-DBD7-408C-B44D-A51529CE6C25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Business", "Geo.Business\Geo.Business.csproj", "{40B22AD2-CF31-48AA-9D81-8BB3B8F19B7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Rest.Business", "Geo.Business\Geo.Rest.Business.csproj", "{40B22AD2-CF31-48AA-9D81-8BB3B8F19B7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

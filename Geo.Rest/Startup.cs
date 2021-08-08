@@ -1,8 +1,8 @@
-using Geo.Business.Automapper;
-using Geo.Business.Services;
-using Geo.Business.Services.Interfaces;
-using Geo.Data.Contexts;
-using Geo.Domain;
+using Geo.Rest.Business.Automapper;
+using Geo.Rest.Business.Services;
+using Geo.Rest.Business.Services.Interfaces;
+using Geo.Rest.Data.Contexts;
+using Geo.Rest.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.IO;
+using System.Net;
 using System.Reflection;
 
 namespace Geo.Rest
@@ -53,6 +54,12 @@ namespace Geo.Rest
                 options.SubstituteApiVersionInUrl = true;
             });
 
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = (int)HttpStatusCode.PermanentRedirect;
+                options.HttpsPort = 443;
+            });
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -76,16 +83,15 @@ namespace Geo.Rest
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-
-            app.UseDeveloperExceptionPage();
+            }            
 
             app.UseSwagger();
+
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Geo.Rest v1"));
 
             app.UseStaticFiles();
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

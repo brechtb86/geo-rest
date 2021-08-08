@@ -1,10 +1,10 @@
-﻿using Geo.Data.Shared;
+﻿using Geo.Rest.Data.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Geo.Data.Extensions
+namespace Geo.Rest.Data.Extensions
 {
     public static class QueryableExtensions
     {

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 #nullable disable
 
-namespace Geo.Domain.Models.Geo
+namespace Geo.Rest.Domain.Models.Geo
 {
     public partial class Country : Base
     {

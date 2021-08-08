@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Data.Entities.Geo
+namespace Geo.Rest.Data.Entities.Geo
 {
     public abstract class Base
     {

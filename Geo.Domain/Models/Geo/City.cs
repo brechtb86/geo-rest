@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Geo.Domain.Models.Geo
+namespace Geo.Rest.Domain.Models.Geo
 {
     public partial class City : Base
     {        

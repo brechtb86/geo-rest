@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Domain.Models.Geo
+namespace Geo.Rest.Domain.Models.Geo
 {
     public abstract class Base
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Geo.Data.Entities.Geo
+namespace Geo.Rest.Data.Entities.Geo
 {
     public partial class State : Base
     {

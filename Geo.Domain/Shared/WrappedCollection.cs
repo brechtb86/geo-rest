@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geo.Domain.Shared
+namespace Geo.Rest.Domain.Shared
 {
     public class WrappedCollection<T>
     {
