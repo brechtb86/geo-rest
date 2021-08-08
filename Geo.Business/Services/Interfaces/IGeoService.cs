@@ -13,7 +13,7 @@ namespace Geo.Rest.Business.Services.Interfaces
     {
         Task<WrappedCollection<Country>> GetCountriesAsync(CountryCollectionQueryParameters parameters);
 
-        //Task<Country> GetCountryByIdAsync(int id);
+        Task<Country> GetCountryByIdAsync(int countryId, CountryItemQueryParameters parameters);
 
         //Task<ICollection<State>> GetStatesAsync(CollectionQueryParameters parameters);
 

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Geo.Rest.Domain.Models.Query
 {
-    public class ItemQueryParameters
+    public class ItemQueryParameters : BaseQueryParameters
     {
-        public int Id { get; set; }
+        
     }
 }

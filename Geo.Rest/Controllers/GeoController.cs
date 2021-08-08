@@ -36,16 +36,18 @@ namespace Geo.Rest.Controllers
             return this.Ok(dynamicCountries);
         }
 
-        //[HttpGet("countries/{id:int}")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(Country), 200)]
-        //[ProducesResponseType(404)]
-        //public async Task<IActionResult> GetCountryByIdAsync(int id)
-        //{
-        //    var country = await this._geoService.GetCountryByIdAsync(id);
+        [HttpGet("countries/{countryId:int}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Country), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetCountryByIdAsync(int countryId, [FromQuery] CountryItemQueryParameters parameters)
+        {
+            var country = await this._geoService.GetCountryByIdAsync(countryId, parameters);
 
-        //    return this.Ok(country);
-        //}
+            var dynamicCountry = country.SelectFields(parameters.Fields);
+
+            return this.Ok(dynamicCountry);
+        }
 
         //[HttpGet("states")]
         //[Produces("application/json")]

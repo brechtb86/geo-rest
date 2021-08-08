@@ -38,17 +38,20 @@ namespace Geo.Rest.Business.Services
             });            
         }
 
-        //public async Task<Country> GetCountryByIdAsync(int id)
-        //{
-        //    var countryEntity = await this._geoContext.FindAsync<Data.Entities.Geo.Country>(id);
+        public async Task<Country> GetCountryByIdAsync(int countryId, CountryItemQueryParameters parameters)
+        {            
+            var countryEntity = await this._geoContext.FindAsync<Data.Entities.Geo.Country>(countryId);
 
-        //    if (countryEntity == null)
-        //    {
-        //        return null;
-        //    }
+            if (countryEntity == null)
+            {
+                return null;
+            }
 
-        //    return this._mapper.Map<Country>(countryEntity);
-        //}
+            return this._mapper.Map<Country>(countryEntity, opts =>
+            {
+                opts.Items.Add("language", parameters.Language);
+            });
+        }
 
         //public async Task<ICollection<State>> GetStatesAsync(CollectionQueryParameters parameters)
         //{
