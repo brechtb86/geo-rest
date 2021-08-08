@@ -28,12 +28,12 @@ namespace Geo.Rest.Data.Shared
 
         }
 
-        public WrappedCollection(ICollection<T> items, int count, int page, int pageSize)
+        public WrappedCollection(ICollection<T> items, int totalCount, int currentPage, int pageSize)
         {
-            TotalCount = count;
+            TotalCount = totalCount;
             PageSize = pageSize;
-            CurrentPage = page;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            CurrentPage = currentPage;
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
             foreach (var item in items)
             {

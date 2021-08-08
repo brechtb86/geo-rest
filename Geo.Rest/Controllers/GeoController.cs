@@ -3,7 +3,10 @@ using Geo.Rest.Domain.Models.Geo;
 using Geo.Rest.Domain.Models.Query;
 using Geo.Rest.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using Geo.Rest.Business.Extensions;
 
 namespace Geo.Rest.Controllers
 {
@@ -26,8 +29,8 @@ namespace Geo.Rest.Controllers
         public async Task<IActionResult> GetCountriesAsync([FromQuery] CountryCollectionQueryParameters parameters)
         {
             var countries = await this._geoService.GetCountriesAsync(parameters);
-
-            return this.Ok(countries);
+                        
+            return this.Ok(countries.SelectFields(parameters.Fields));
         }
 
         //[HttpGet("countries/{id:int}")]

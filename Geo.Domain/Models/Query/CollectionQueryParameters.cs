@@ -36,5 +36,13 @@ namespace Geo.Rest.Domain.Models.Query
                 this._pageSize = (value > this._maxPageSize) ? this._maxPageSize : value;
             }
         }
+
+        /// <summary>
+        /// A pipe-seperated list of the fields that should be returned.
+        /// </summary>
+        /// <value>
+        /// The fields.
+        /// </value>
+        public string Fields { get; set; }
     }
 }
