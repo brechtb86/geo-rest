@@ -53,6 +53,21 @@ namespace Geo.Rest.Business.Services
             });
         }
 
+        public async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, CountryItemQueryParameters parameters)
+        {
+            var countryEntity = await this._geoContext.Countries.FirstOrDefaultAsync(country => country.TwoLetterIsoCode.ToLower() == twoLetterIsoCode.ToLower());
+
+            if (countryEntity == null)
+            {
+                return null;
+            }
+
+            return this._mapper.Map<Country>(countryEntity, opts =>
+            {
+                opts.Items.Add("language", parameters.Language);
+            });
+        }
+
         //public async Task<ICollection<State>> GetStatesAsync(CollectionQueryParameters parameters)
         //{
         //    var stateEntities = await this._geoContext.States.ToListAsync();

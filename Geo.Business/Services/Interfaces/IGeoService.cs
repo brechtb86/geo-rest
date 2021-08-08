@@ -15,6 +15,8 @@ namespace Geo.Rest.Business.Services.Interfaces
 
         Task<Country> GetCountryByIdAsync(int countryId, CountryItemQueryParameters parameters);
 
+        Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, CountryItemQueryParameters parameters);
+
         //Task<ICollection<State>> GetStatesAsync(CollectionQueryParameters parameters);
 
         //Task<State> GetStateByIdAsync(int id);

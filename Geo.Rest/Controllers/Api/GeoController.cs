@@ -19,7 +19,7 @@ namespace Geo.Rest.Controllers.Api
 
         public GeoController(IGeoService geoService)
         {
-            _geoService = geoService;
+            this._geoService = geoService;
         }
 
         [HttpGet("countries")]
@@ -33,7 +33,7 @@ namespace Geo.Rest.Controllers.Api
             var dynamicCountries = countries.SelectFields(parameters.Fields);
 
 
-            return Ok(dynamicCountries);
+            return this.Ok(dynamicCountries);
         }
 
         [HttpGet("countries/{countryId:int}")]
@@ -46,7 +46,20 @@ namespace Geo.Rest.Controllers.Api
 
             var dynamicCountry = country.SelectFields(parameters.Fields);
 
-            return Ok(dynamicCountry);
+            return this.Ok(dynamicCountry);
+        }
+
+        [HttpGet("countries/{twoLetterIsoCode}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Country), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, [FromQuery] CountryItemQueryParameters parameters)
+        {
+            var country = await _geoService.GetCountryByTwoLetterIsoCodeAsync(twoLetterIsoCode, parameters);
+
+            var dynamicCountry = country.SelectFields(parameters.Fields);
+
+            return this.Ok(dynamicCountry);
         }
 
         //[HttpGet("states")]
