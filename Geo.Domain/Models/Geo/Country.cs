@@ -8,11 +8,23 @@ namespace Geo.Rest.Domain.Models.Geo
 {
     public partial class Country : Base
     {
+        private string _localizedName;
+
         public Country()
         {
         }
 
-        public string LocalizedName { get; set; }
+        public string LocalizedName
+        {
+            get
+            {
+                return string.IsNullOrEmpty(this._localizedName) ? this.Name : this._localizedName;
+            }
+            set
+            {
+                this._localizedName = value;
+            }
+        }
         public string ThreeLetterIsoCode { get; set; }
         public string NumericCode { get; set; }
         public string TwoLetterIsoCode { get; set; }
@@ -33,9 +45,9 @@ namespace Geo.Rest.Domain.Models.Geo
         public string Emoji { get; set; }
         public string EmojiU { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }        
+        public DateTime UpdatedAt { get; set; }
         public string WikiDataId { get; set; }
 
-        public ICollection<Timezone> Timezones { get; set; }        
+        public ICollection<Timezone> Timezones { get; set; }
     }
 }
