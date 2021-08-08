@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Geo.Domain</name>
+    </assembly>
+    <members>
+        <member name="P:Geo.Domain.Models.Query.CollectionQueryParameters.Page">
+            <summary>
+            The page of the collection, the default value is 1.
+            </summary>
+            <value>
+            The page.
+            </value>
+        </member>
+        <member name="P:Geo.Domain.Models.Query.CollectionQueryParameters.PageSize">
+            <summary>
+            The size of the page, the default value is 25, the maximum value is 275.
+            </summary>
+            <value>
+            The size of the page.
+            </value>
+        </member>
+    </members>
+</doc>

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Geo.Business.Automapper.Converters;
-using Geo.Domain.Shared;
 
 namespace Geo.Business.Automapper.Profiles
 {
@@ -8,7 +7,7 @@ namespace Geo.Business.Automapper.Profiles
     {
         public GeoProfile()
         {
-            this.CreateMap<WrappedCollection<Domain.Models.Geo.Country>, WrappedCollection<Data.Entities.Geo.Country>>().ReverseMap();
+            this.CreateMap<Domain.Shared.WrappedCollection<Domain.Models.Geo.Country>, Data.Shared.WrappedCollection<Data.Entities.Geo.Country>>().ReverseMap();
 
             this.CreateMap<Domain.Models.Geo.Country, Data.Entities.Geo.Country>()
                 .ForMember(dest => dest.Timezones, opts => opts.MapFrom(src => src.TimezonesJson))

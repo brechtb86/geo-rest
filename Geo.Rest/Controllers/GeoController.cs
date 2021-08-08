@@ -2,11 +2,7 @@
 using Geo.Domain.Models.Geo;
 using Geo.Domain.Models.Query;
 using Geo.Domain.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Geo.Rest.Controllers

@@ -5,15 +5,13 @@ using System.Collections.Generic;
 
 namespace Geo.Data.Entities.Geo
 {
-    public partial class State
+    public partial class State : Base
     {
         public State()
         {
             Cities = new HashSet<City>();
         }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
+       
         public int CountryId { get; set; }
         public string CountryCode { get; set; }
         public string FipsCode { get; set; }
@@ -21,8 +19,7 @@ namespace Geo.Data.Entities.Geo
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public short Flag { get; set; }
+        public DateTime UpdatedAt { get; set; }        
         public string WikiDataId { get; set; }
 
         public virtual Country Country { get; set; }

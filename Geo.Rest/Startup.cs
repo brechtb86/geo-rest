@@ -2,6 +2,7 @@ using Geo.Business.Automapper;
 using Geo.Business.Services;
 using Geo.Business.Services.Interfaces;
 using Geo.Data.Contexts;
+using Geo.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,16 +10,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.IO;
 using System.Reflection;
 
 namespace Geo.Rest
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
+            this.Environment = environment;
         }
+
+        public IWebHostEnvironment Environment { get; }
 
         public IConfiguration Configuration { get; }
 
@@ -55,6 +60,13 @@ namespace Geo.Rest
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Geo.Rest", Version = "v1" });
 
                 c.DescribeAllParametersInCamelCase();
+
+                var xmlDocumentFile = typeof(DomainAssembly).Assembly.Location.Replace("dll", "xml");
+
+                if (File.Exists(xmlDocumentFile))
+                {
+                    c.IncludeXmlComments(xmlDocumentFile);
+                }
             });
         }
 
@@ -64,15 +76,20 @@ namespace Geo.Rest
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Geo.Rest v1"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseDeveloperExceptionPage();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Geo.Rest v1"));
+
+            app.UseStaticFiles();
+
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

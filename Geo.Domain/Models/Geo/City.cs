@@ -5,10 +5,8 @@ using System.Collections.Generic;
 
 namespace Geo.Domain.Models.Geo
 {
-    public partial class City
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+    public partial class City : Base
+    {        
         public int StateId { get; set; }
         public string StateCode { get; set; }
         public int CountryId { get; set; }
@@ -16,8 +14,7 @@ namespace Geo.Domain.Models.Geo
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public short Flag { get; set; }
+        public DateTime UpdatedAt { get; set; }        
         public string WikiDataId { get; set; }
 
         public Country Country { get; set; }

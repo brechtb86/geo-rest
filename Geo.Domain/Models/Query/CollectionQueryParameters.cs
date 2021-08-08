@@ -11,8 +11,20 @@ namespace Geo.Domain.Models.Query
         private int _maxPageSize = QueryParameterConstants.MaxPageSize;
         private int _pageSize = QueryParameterConstants.PageSize;
 
+        /// <summary>
+        /// The page of the collection, the default value is 1.
+        /// </summary>
+        /// <value>
+        /// The page.
+        /// </value>
         public int Page { get; set; } = 1;
 
+        /// <summary>
+        /// The size of the page, the default value is 25, the maximum value is 275.
+        /// </summary>
+        /// <value>
+        /// The size of the page.
+        /// </value>
         public int PageSize
         {
             get

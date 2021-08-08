@@ -17,8 +17,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Geo.Domain\Geo.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

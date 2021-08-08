@@ -20,7 +20,8 @@ namespace Geo.Rest
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseIISIntegration();
+                    webBuilder.UseStartup<Startup>();                    
                 });
     }
 }

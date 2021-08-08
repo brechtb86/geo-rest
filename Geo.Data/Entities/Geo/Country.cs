@@ -5,16 +5,14 @@ using System.Collections.Generic;
 
 namespace Geo.Data.Entities.Geo
 {
-    public partial class Country
+    public partial class Country : Base
     {
         public Country()
         {
             Cities = new HashSet<City>();
             States = new HashSet<State>();
         }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
+                       
         public string ThreeLetterIsoCode { get; set; }
         public string NumericCode { get; set; }
         public string TwoLetterIsoCode { get; set; }
@@ -33,8 +31,7 @@ namespace Geo.Data.Entities.Geo
         public string Emoji { get; set; }
         public string EmojiU { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public short Flag { get; set; }
+        public DateTime UpdatedAt { get; set; }       
         public string WikiDataId { get; set; }
 
         public virtual ICollection<City> Cities { get; set; }

@@ -1,4 +1,4 @@
-﻿using Geo.Domain.Shared;
+﻿using Geo.Data.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Linq;
