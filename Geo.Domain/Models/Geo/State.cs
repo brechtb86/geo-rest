@@ -10,16 +10,37 @@ namespace Geo.Rest.Domain.Models.Geo
         public State()
         {
         }
-        
-        public int CountryId { get; set; }
-        public string CountryCode { get; set; }
-        public string FipsCode { get; set; }
-        public string TwoLetterIsoCode { get; set; }
-        public decimal? Latitude { get; set; }
-        public decimal? Longitude { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }        
-        public string WikiDataId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the fips code.
+        /// </summary>
+        /// <value>
+        /// The fips code.
+        /// </value>
+        public string FipsCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the two letter iso code.
+        /// </summary>
+        /// <value>
+        /// The two letter iso code.
+        /// </value>
+        public string TwoLetterIsoCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the latitude.
+        /// </summary>
+        /// <value>
+        /// The latitude.
+        /// </value>
+        public decimal? Latitude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the longitude.
+        /// </summary>
+        /// <value>
+        /// The longitude.
+        /// </value>
+        public decimal? Longitude { get; set; }
     }
 }

@@ -17,10 +17,7 @@ namespace Geo.Rest.Data.Entities.Geo
         public string FipsCode { get; set; }
         public string TwoLetterIsoCode { get; set; }
         public decimal? Latitude { get; set; }
-        public decimal? Longitude { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }        
-        public string WikiDataId { get; set; }
+        public decimal? Longitude { get; set; }        
 
         public virtual Country Country { get; set; }
         public virtual ICollection<City> Cities { get; set; }

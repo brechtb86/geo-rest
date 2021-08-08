@@ -5,19 +5,22 @@ using System.Collections.Generic;
 
 namespace Geo.Rest.Domain.Models.Geo
 {
-    public partial class City : Base
-    {        
-        public int StateId { get; set; }
-        public string StateCode { get; set; }
-        public int CountryId { get; set; }
-        public string CountryCode { get; set; }
+    public class City : Base
+    {
+        /// <summary>
+        /// The latitude.
+        /// </summary>
+        /// <value>
+        /// The latitude.
+        /// </value>
         public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }        
-        public string WikiDataId { get; set; }
 
-        public Country Country { get; set; }
-        public State State { get; set; }
+        /// <summary>
+        /// The longitude.
+        /// </summary>
+        /// <value>
+        /// The longitude.
+        /// </value>
+        public decimal Longitude { get; set; }   
     }
 }

@@ -29,10 +29,7 @@ namespace Geo.Rest.Data.Entities.Geo
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public string Emoji { get; set; }
-        public string EmojiU { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }       
-        public string WikiDataId { get; set; }
+        public string EmojiU { get; set; }       
 
         public virtual ICollection<City> Cities { get; set; }
         public virtual ICollection<State> States { get; set; }
