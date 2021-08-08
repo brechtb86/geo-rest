@@ -28,11 +28,14 @@ namespace Geo.Business.Services
             this._mapper = mapper;
         }
 
-        public async Task<WrappedCollection<Country>> GetCountriesAsync(CollectionQueryParameters parameters)
+        public async Task<WrappedCollection<Country>> GetCountriesAsync(CountryCollectionQueryParameters parameters)
         {
             var countryEntities = await this._geoContext.Countries.ToWrappedCollectionAsync<Data.Entities.Geo.Country>(parameters.Page, parameters.PageSize);
 
-            return this._mapper.Map<WrappedCollection<Country>>(countryEntities);            
+            return this._mapper.Map<WrappedCollection<Country>>(countryEntities, opts =>
+            {
+                opts.Items.Add("language", parameters.Language);
+            });            
         }
 
         //public async Task<Country> GetCountryByIdAsync(int id)

@@ -20,5 +20,13 @@
             The size of the page.
             </value>
         </member>
+        <member name="P:Geo.Domain.Models.Query.CountryCollectionQueryParameters.Language">
+            <summary>
+            The two letter isocode for the language, optional, possible values: br, cn, de, es, fa, fr, hr, it, ja, kr, nl, pt.
+            </summary>
+            <value>
+            The language.
+            </value>
+        </member>
     </members>
 </doc>

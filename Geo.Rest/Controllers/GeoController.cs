@@ -23,7 +23,7 @@ namespace Geo.Rest.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(WrappedCollection<Country>), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountriesAsync([FromQuery] CollectionQueryParameters parameters)
+        public async Task<IActionResult> GetCountriesAsync([FromQuery] CountryCollectionQueryParameters parameters)
         {
             var countries = await this._geoService.GetCountriesAsync(parameters);
 

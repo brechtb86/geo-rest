@@ -11,7 +11,8 @@ namespace Geo.Domain.Models.Geo
         public Country()
         {
         }
-        
+
+        public string LocalizedName { get; set; }
         public string ThreeLetterIsoCode { get; set; }
         public string NumericCode { get; set; }
         public string TwoLetterIsoCode { get; set; }
@@ -35,7 +36,6 @@ namespace Geo.Domain.Models.Geo
         public DateTime UpdatedAt { get; set; }        
         public string WikiDataId { get; set; }
 
-        public ICollection<Timezone> Timezones { get; set; }
-        public ICollection<Translation> Translations { get; set; }
+        public ICollection<Timezone> Timezones { get; set; }        
     }
 }

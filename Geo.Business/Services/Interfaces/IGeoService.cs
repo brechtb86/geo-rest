@@ -11,7 +11,7 @@ namespace Geo.Business.Services.Interfaces
 {
     public interface IGeoService
     {
-        Task<WrappedCollection<Country>> GetCountriesAsync(CollectionQueryParameters parameters);
+        Task<WrappedCollection<Country>> GetCountriesAsync(CountryCollectionQueryParameters parameters);
 
         //Task<Country> GetCountryByIdAsync(int id);
 
