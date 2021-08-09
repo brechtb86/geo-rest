@@ -32,7 +32,6 @@ namespace Geo.Rest.Controllers.Api
 
             var dynamicCountries = countries.SelectFields(parameters.Fields);
 
-
             return this.Ok(dynamicCountries);
         }
 
@@ -43,6 +42,11 @@ namespace Geo.Rest.Controllers.Api
         public async Task<IActionResult> GetCountryByIdAsync(int countryId, [FromQuery] CountryItemQueryParameters parameters)
         {
             var country = await _geoService.GetCountryByIdAsync(countryId, parameters);
+
+            if(country == null)
+            {
+                return this.NotFound($"The requested endpoint is correct but a country with id '{countryId}' cannot be found");
+            }
 
             var dynamicCountry = country.SelectFields(parameters.Fields);
 
@@ -56,6 +60,11 @@ namespace Geo.Rest.Controllers.Api
         public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, [FromQuery] CountryItemQueryParameters parameters)
         {
             var country = await _geoService.GetCountryByTwoLetterIsoCodeAsync(twoLetterIsoCode, parameters);
+
+            if (country == null)
+            {
+                return this.NotFound($"The requested endpoint is correct but a country with two letter isocode '{twoLetterIsoCode}' cannot be found");
+            }
 
             var dynamicCountry = country.SelectFields(parameters.Fields);
 
