@@ -39,7 +39,7 @@ namespace Geo.Rest.Business.Services
 
             return this._mapper.Map<WrappedCollection<Country>>(countryEntities, opts =>
             {
-                opts.Items.Add("language", parameters.Language);
+                opts.Items.Add("language", parameters.Language ?? string.Empty);
             });
         }
 
@@ -57,7 +57,7 @@ namespace Geo.Rest.Business.Services
 
             return this._mapper.Map<Country>(countryEntity, opts =>
             {
-                opts.Items.Add("language", parameters.Language);
+                opts.Items.Add("language", parameters.Language ?? string.Empty);
             });
         }
 
@@ -75,7 +75,7 @@ namespace Geo.Rest.Business.Services
 
             return this._mapper.Map<Country>(countryEntity, opts =>
             {
-                opts.Items.Add("language", parameters.Language);
+                opts.Items.Add("language", parameters.Language ?? string.Empty);
             });
         }
 
