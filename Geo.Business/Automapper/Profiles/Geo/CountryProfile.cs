@@ -18,67 +18,14 @@ namespace Geo.Rest.Business.Automapper.Profiles.Geo
             this.CreateMap<Domain.Shared.WrappedCollection<Domain.Models.Geo.Country>, Data.Shared.WrappedCollection<Data.Entities.Geo.Country>>().ReverseMap();
 
             this.CreateMap<Domain.Models.Geo.Country, Data.Entities.Geo.Country>()
-                .ForMember(dest => dest.Timezones, opts => opts.MapFrom(src => src.TimezonesJson))
-                .ForMember(dest => dest.Translations, opts => opts.MapFrom(src => src.TranslationsJson));
+                .ForMember(dest => dest.CountryTimeZones, opts => opts.MapFrom(src => src.TimeZones));
+
 
             this.CreateMap<Data.Entities.Geo.Country, Domain.Models.Geo.Country>()
-                .ForMember(dest => dest.TimezonesJson, opts => opts.MapFrom(src => src.Timezones))
-                .ForMember(dest => dest.Timezones, opts => opts.ConvertUsing(new TimezonesJsonValueConverter(), src => src.Timezones))
-                .ForMember(dest => dest.LocalizedName, opts => opts.ConvertUsing(new TranslationsJsonValueConverter(), src => src.Translations));
+                .ForMember(dest => dest.TimeZones, opts => opts.MapFrom(src => src.CountryTimeZones))
+                .ForMember(dest => dest.TranslatedName, opts => opts.MapFrom((src, dest, destMember, context) => src.CountryNameTranslations.Where(translation => translation.Language.ToLower() == context.Items["language"].ToString().ToLower()).Select(translation => translation.Value).FirstOrDefault()));
+
+            this.CreateMap<Data.Entities.Geo.CountryTimeZone, Domain.Models.Geo.TimeZone>();
         }
-    }
-
-    class TranslationsJsonValueConverter : IValueConverter<string, string>
-    {
-        public string Convert(string sourceMember, ResolutionContext context)
-        {
-            var language = context.Items["language"]?.ToString().ToLower();
-
-            if(string.IsNullOrEmpty(language))
-            {
-                return null;
-            }
-
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(sourceMember.Replace("\\", "")).GetValueOrDefault(language);
-        }
-    }
-
-    class TimezonesJsonValueConverter : IValueConverter<string, ICollection<Domain.Models.Geo.Timezone>>
-    {
-        public ICollection<Domain.Models.Geo.Timezone> Convert(string sourceMember, ResolutionContext context)
-        {
-            var result = new Collection<Domain.Models.Geo.Timezone>();
-
-            var timezones = JsonConvert.DeserializeObject<ICollection<TimezoneJsonObject>>(sourceMember.Replace("\\", ""));
-
-            foreach (var timezone in timezones)
-            {
-                result.Add(new Domain.Models.Geo.Timezone
-                {
-                    ZoneName = timezone.ZoneName,
-                    GmtOffset = timezone.GmtOffset,
-                    GmtOffsetName = timezone.GmtOffsetName,
-                    Abbreviation = timezone.Abbreviation,
-                    TimezoneName = timezone.TimezoneName
-
-                });
-            }
-
-            return result;
-        }
-
-        private class TimezoneJsonObject
-        {
-            [JsonProperty(PropertyName = "zoneName")]
-            public string ZoneName { get; set; }
-            [JsonProperty(PropertyName = "gmtOffset")]
-            public int GmtOffset { get; set; }
-            [JsonProperty(PropertyName = "gmtOffsetName")]
-            public string GmtOffsetName { get; set; }
-            [JsonProperty(PropertyName = "abbreviation")]
-            public string Abbreviation { get; set; }
-            [JsonProperty(PropertyName = "tzName")]
-            public string TimezoneName { get; set; }
-        }
-    }
+    }    
 }

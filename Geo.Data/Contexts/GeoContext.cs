@@ -20,6 +20,8 @@ namespace Geo.Rest.Data.Contexts
 
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<CountryNameTranslation> CountryNameTranslations { get; set; }
+        public virtual DbSet<CountryTimeZone> CountryTimeZones { get; set; }
         public virtual DbSet<State> States { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -37,10 +39,6 @@ namespace Geo.Rest.Data.Contexts
 
             modelBuilder.Entity<City>(entity =>
             {
-                entity.HasIndex(e => new { e.StateId, e.CountryId }, "IX_Cities");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CountryCode)
                     .IsRequired()
                     .HasMaxLength(2)
@@ -53,7 +51,7 @@ namespace Geo.Rest.Data.Contexts
 
                 entity.Property(e => e.Flag).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Latitude).HasColumnType("decimal(10, 8)");
+                entity.Property(e => e.Latitude).HasColumnType("decimal(11, 8)");
 
                 entity.Property(e => e.Longitude).HasColumnType("decimal(11, 8)");
 
@@ -86,8 +84,6 @@ namespace Geo.Rest.Data.Contexts
 
             modelBuilder.Entity<Country>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Capital).HasMaxLength(255);
 
                 entity.Property(e => e.CreatedAt).HasColumnType("date");
@@ -98,11 +94,11 @@ namespace Geo.Rest.Data.Contexts
 
                 entity.Property(e => e.Emoji).HasMaxLength(191);
 
-                entity.Property(e => e.EmojiU).HasMaxLength(191);
+                entity.Property(e => e.EmojiUnicode).HasMaxLength(191);
 
                 entity.Property(e => e.Flag).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Latitude).HasColumnType("decimal(10, 8)");
+                entity.Property(e => e.Latitude).HasColumnType("decimal(11, 8)");
 
                 entity.Property(e => e.Longitude).HasColumnType("decimal(11, 8)");
 
@@ -112,10 +108,7 @@ namespace Geo.Rest.Data.Contexts
 
                 entity.Property(e => e.Native).HasMaxLength(255);
 
-                entity.Property(e => e.NumericCode)
-                    .HasMaxLength(3)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
+                entity.Property(e => e.NumericCode).HasMaxLength(3);
 
                 entity.Property(e => e.PhoneCode).HasMaxLength(255);
 
@@ -123,31 +116,51 @@ namespace Geo.Rest.Data.Contexts
 
                 entity.Property(e => e.SubRegion).HasMaxLength(255);
 
-                entity.Property(e => e.ThreeLetterIsoCode)
-                    .HasMaxLength(3)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
+                entity.Property(e => e.ThreeLetterIsoCode).HasMaxLength(3);
 
                 entity.Property(e => e.Tld)
                     .HasMaxLength(255)
                     .HasColumnName("TLD");
 
-                entity.Property(e => e.TwoLetterIsoCode)
-                    .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
+                entity.Property(e => e.TwoLetterIsoCode).HasMaxLength(2);
 
                 entity.Property(e => e.UpdatedAt).HasColumnType("date");
 
                 entity.Property(e => e.WikiDataId).HasMaxLength(255);
             });
 
+            modelBuilder.Entity<CountryNameTranslation>(entity =>
+            {
+                entity.Property(e => e.Language).HasMaxLength(2);
+
+                entity.Property(e => e.Value).HasMaxLength(100);
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.CountryNameTranslations)
+                    .HasForeignKey(d => d.CountryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CountryNameTranslations_Countries");
+            });
+
+            modelBuilder.Entity<CountryTimeZone>(entity =>
+            {
+                entity.Property(e => e.Abbreviation).HasMaxLength(10);
+
+                entity.Property(e => e.GmtOffsetName).HasMaxLength(100);
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.Property(e => e.TimeZoneName).HasMaxLength(100);
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.CountryTimeZones)
+                    .HasForeignKey(d => d.CountryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CountryTimeZones_Countries");
+            });
+
             modelBuilder.Entity<State>(entity =>
             {
-                entity.HasIndex(e => e.CountryId, "IX_States");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CountryCode)
                     .IsRequired()
                     .HasMaxLength(2)
@@ -160,7 +173,7 @@ namespace Geo.Rest.Data.Contexts
 
                 entity.Property(e => e.Flag).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Latitude).HasColumnType("decimal(10, 8)");
+                entity.Property(e => e.Latitude).HasColumnType("decimal(11, 8)");
 
                 entity.Property(e => e.Longitude).HasColumnType("decimal(11, 8)");
 

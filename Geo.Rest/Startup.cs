@@ -122,7 +122,8 @@ namespace Geo.Rest
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(name: "export", pattern: "export/", new { controller = "Home", action = "Export" });
+                endpoints.MapControllerRoute(name: "default", pattern: "{controller}/{action}/", new { controller = "Home", action = "Index" });
                 endpoints.MapControllers();
             });
         }

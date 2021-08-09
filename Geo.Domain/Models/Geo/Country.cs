@@ -8,27 +8,27 @@ namespace Geo.Rest.Domain.Models.Geo
 {
     public class Country : Base
     {
-        private string _localizedName;
+        private string _translatedName;
 
         public Country()
         {
         }
 
         /// <summary>
-        /// The localized name based on the language parameter.
+        /// The translated name based on the language parameter.
         /// </summary>
         /// <value>
-        /// The localized name based on the language parameter.
+        /// The translated name based on the language parameter.
         /// </value>
-        public string LocalizedName
+        public string TranslatedName
         {
             get
             {
-                return string.IsNullOrEmpty(this._localizedName) ? this.Name : this._localizedName;
+                return string.IsNullOrEmpty(this._translatedName) ? this.Name : this._translatedName;
             }
             set
             {
-                this._localizedName = value;
+                this._translatedName = value;
             }
         }
 
@@ -120,12 +120,6 @@ namespace Geo.Rest.Domain.Models.Geo
         /// </value>
         public string SubRegion { get; set; }
 
-        [JsonIgnore]
-        public string TimezonesJson { get; set; }
-
-        [JsonIgnore]
-        public string TranslationsJson { get; set; }
-
         /// <summary>
         /// The latitude.
         /// </summary>
@@ -156,14 +150,14 @@ namespace Geo.Rest.Domain.Models.Geo
         /// <value>
         /// The emoji u.
         /// </value>
-        public string EmojiU { get; set; }
-           
+        public string EmojiUnicode { get; set; }
+
         /// <summary>
         /// The timezones.
         /// </summary>
         /// <value>
         /// The timezones.
         /// </value>
-        public ICollection<Timezone> Timezones { get; set; }
+        public ICollection<TimeZone> TimeZones { get; set; }
     }
 }

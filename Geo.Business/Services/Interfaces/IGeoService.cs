@@ -22,5 +22,7 @@ namespace Geo.Rest.Business.Services.Interfaces
         //Task<State> GetStateByIdAsync(int id);
 
         //Task<ICollection<State>> GetStatesByCountryIdAsync(int countryId);
+
+        string GenerateExportScript(string databaseName = "Geo");
     }
 }
