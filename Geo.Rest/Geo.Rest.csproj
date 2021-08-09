@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\.well-known\pki-validation\B5C539E90F3B7293D34A473992AD55D1.txt">
+    <Content Include="wwwroot\.well-known\pki-validation\47CB29280B7C402FAA5F927542B9CD1E.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

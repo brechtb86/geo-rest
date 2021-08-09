@@ -68,13 +68,13 @@ namespace Geo.Rest
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "geolocation.rest",
+                    Title = "geo-service.rest",
                     Version = "v1",
                     Contact = new OpenApiContact()
                     {
                         Name = "Brecht Baekelandt",
-                        Email = "brecht@geolocation.rest",
-                        Url = new Uri("https://geolocation.rest")
+                        Email = "brecht@geo-service.rest",
+                        Url = new Uri("https://geo-service.rest")
                     }
                 });
 
@@ -108,7 +108,7 @@ namespace Geo.Rest
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "geolocation.rest v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "geo-service.rest v1"));
 
             app.UseStaticFiles();
 

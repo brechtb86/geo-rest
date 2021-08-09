@@ -107,9 +107,9 @@ namespace Geo.Rest.Business.Services
             var exportScriptStringBuilder = new StringBuilder();
 
             exportScriptStringBuilder.AppendLine($"--");
-            exportScriptStringBuilder.AppendLine($"-- Exported by https://geolocation.rest/export?datbaseName={databaseName}");
-            exportScriptStringBuilder.AppendLine($"-- Created by Brecht Baekelandt - brecht@geolocation.rest");
-            exportScriptStringBuilder.AppendLine($"-- For more info visit https://geolocation.rest/");
+            exportScriptStringBuilder.AppendLine($"-- Exported by https://geo-service.rest/export?datbaseName={databaseName}");
+            exportScriptStringBuilder.AppendLine($"-- Created by Brecht Baekelandt - brecht@geo-service.rest");
+            exportScriptStringBuilder.AppendLine($"-- For more info visit https://geo-service.rest/");
             exportScriptStringBuilder.AppendLine($"--");
             exportScriptStringBuilder.AppendLine($"IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '{databaseName}')");
             exportScriptStringBuilder.AppendLine($"BEGIN");

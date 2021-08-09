@@ -1,4 +1,4 @@
-# geolocation.rest service
+# geo-service.rest
 
 ## What does it do?
 
@@ -10,11 +10,11 @@ This service is stil under development, this service should in no way be used in
 
 ## Endpoints
 
-v1: https://geolocation.rest/api/v1/
+v1: https://geo-service.rest/api/v1/
 
 ## Docs & tryout
 
-For documentation and tryout go to the [Swagger page](https://geolocation.rest/swagger/index.html).
+For documentation and tryout go to the [Swagger page](https://geo-service.rest/swagger/index.html).
 
 ## A big thanks!
 
@@ -22,11 +22,11 @@ This service is using the data from [dr5hn](https://github.com/dr5hn/countries-s
 
 ## Export
 
-It is possible to export the database via https://geolocation.rest/export?databaseName=Geo&fileType=mssql
+It is possible to export the database via https://geo-service.rest/export?databaseName=Geo&fileType=mssql
 
 To change the database name from the default "Geo" just change the "databaseName" querystring parameter.
 To change the output file type from the default "mssql" just change the "fileType" querystring parameter. For now only "mssql" is supported.
 
 ## Contact
 
-I have set up a mailbox at [brecht@geolocation.rest](mailto:[brecht@geolocation.rest)
+I have set up a mailbox at [brecht@geo-service.rest](mailto:brecht@geo-service.rest)
