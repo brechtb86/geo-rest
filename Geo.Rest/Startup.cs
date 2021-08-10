@@ -5,10 +5,12 @@ using Geo.Rest.Data.Contexts;
 using Geo.Rest.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -26,7 +28,7 @@ namespace Geo.Rest
             this.Configuration = configuration;
             this.Environment = environment;
 
-            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");           
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
         }
 
         public IWebHostEnvironment Environment { get; }
@@ -91,6 +93,8 @@ namespace Geo.Rest
                 }
             });
 
+            services.AddResponseCaching();
+
             services
                 .AddMvcCore()
                 .AddNewtonsoftJson(options =>
@@ -122,6 +126,23 @@ namespace Geo.Rest
             app.UseRouting();
 
             //app.UseAuthorization();
+
+            //app.UserCors();
+
+            app.UseResponseCaching();
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                {
+                    Public = true,
+                    MaxAge = TimeSpan.FromDays(1)                    
+                };
+
+                context.Response.Headers[HeaderNames.Vary] = new string[] { "Accept-Encoding" };
+
+                await next();
+            });
 
             app.UseEndpoints(endpoints =>
             {
