@@ -20,7 +20,7 @@ namespace Geo.Rest.Business.Extensions
 
             foreach (var field in fields)
             {
-                var property = typeof(T).GetProperties().FirstOrDefault(property => property.Name.ToLowerInvariant().Equals(field.ToLowerInvariant()));
+                var property = typeof(T).GetProperties().FirstOrDefault(property => property.Name.Equals(field, StringComparison.InvariantCultureIgnoreCase));
 
                 if (property != null && property.GetCustomAttribute<JsonIgnoreAttribute>() == null)
                 {

@@ -14,12 +14,12 @@ namespace Geo.Rest.Business.Extensions
 {
     public static class WrappedCollectionExtensions
     {
-        public static WrappedCollection<dynamic> SelectFields<T>(this WrappedCollection<T> source, string pipeSeperatedFields)
+        public static WrappedCollection<dynamic> SelectFields<T>(this WrappedCollection<T> source, IEnumerable<string> fields)
         {
             var result = new WrappedCollection<dynamic>(new Collection<dynamic>(), source.TotalCount, source.CurrentPage, source.PageSize);
 
-            var fields = pipeSeperatedFields?.Split("|", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) ?? typeof(T).GetProperties().Select(property => property.Name);
-              
+            fields = fields != null && fields.Any() ? fields : typeof(T).GetProperties().Select(property => property.Name);
+
             foreach (var item in source.Items)
             {
                 var dynamicItem = new ExpandoObject();
