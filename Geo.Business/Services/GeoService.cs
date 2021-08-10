@@ -47,12 +47,17 @@ namespace Geo.Rest.Business.Services
                 .Include(country => country.CountryNameTranslations)
                 .AsQueryable();
 
+            foreach(var filter in parameters.FiltersList)
+            {
+                countryEntities = this.TryFilter<Country, Data.Entities.Geo.Country>(countryEntities, filter.FilterProperty, filter.FilterValue);
+            }
+
             foreach(var sortBy in parameters.SortByList)
             {
                 countryEntities = this.TrySortBy<Country, Data.Entities.Geo.Country>(countryEntities, sortBy.SortProperty, sortBy.SortDirection);
             }     
 
-            return this._mapper.Map<WrappedCollection<Country>>(await countryEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize));
+            return this._mapper.Map<WrappedCollection<Country>>(countryEntities.ToWrappedCollection(parameters.Page, parameters.PageSize));
         }
 
         public async Task<Country> GetCountryByIdAsync(int countryId, QueryParameters parameters)

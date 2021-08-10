@@ -12,12 +12,12 @@ namespace Geo.Rest.Domain.Exceptions
 
         public SortException(string sortProperty, string message) : base(message)
         {
-            SortProperty = sortProperty;
+            this.SortProperty = sortProperty;
         }
 
         public SortException(string sortProperty, string message, Exception innerExcepton) : base(message, innerExcepton)
         {
-            SortProperty = sortProperty;
+            this.SortProperty = sortProperty;
         }
     }
 }

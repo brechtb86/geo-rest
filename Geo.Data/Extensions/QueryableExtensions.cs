@@ -8,11 +8,11 @@ namespace Geo.Rest.Data.Extensions
 {
     public static class QueryableExtensions
     {
-        public static async Task<WrappedCollection<T>> ToWrappedCollectionAsync<T>(this IQueryable<T> source, int page, int pageSize)
+        public static WrappedCollection<T> ToWrappedCollection<T>(this IQueryable<T> source, int page, int pageSize)
         {
             var count = source.Count();
 
-            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             return new WrappedCollection<T>(new Collection<T>(items), count, page, pageSize);
         }

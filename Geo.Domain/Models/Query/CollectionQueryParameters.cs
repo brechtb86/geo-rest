@@ -66,5 +66,33 @@ namespace Geo.Rest.Domain.Models.Query
             return (sortProperty, sortDirection);
 
         }).Where(sortBy => sortBy != default).ToCollection() ?? new Collection<(string SortProperty, string SortDirection)>();
+
+
+        /// <summary>
+        /// A pipe-seperated list of the filters (e.g. name:bel|capital:brussels).
+        /// </summary>
+        /// <value>
+        /// The sort by.
+        /// </value>
+        public string Filters { get; set; }
+
+
+        [BindNever]
+        public ICollection<(string FilterProperty, string FilterValue)> FiltersList => this.Filters?.Split("|", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(filter =>
+        {
+            var filterExpression = filter.Split(":");
+
+            var filterProperty = filterExpression.FirstOrDefault();
+
+            var filterValue = filterExpression.Count() == 2 ? filterExpression.LastOrDefault() : null;
+
+            if (filterProperty == null || filterValue == null)
+            {
+                return default;
+            }                       
+
+            return (filterProperty, filterValue);
+
+        }).Where(sortBy => sortBy != default).ToCollection() ?? new Collection<(string FilterProperty, string FilterValue)>();
     }
 }
