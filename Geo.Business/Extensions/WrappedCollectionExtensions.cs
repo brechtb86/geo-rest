@@ -24,13 +24,12 @@ namespace Geo.Rest.Business.Extensions
             {
                 var dynamicItem = new ExpandoObject();
                 var dynamicItemCollection = dynamicItem as ICollection<KeyValuePair<string, object>>;
-                      
 
                 foreach (var field in fields)
                 {
-                    var property = typeof(T).GetProperties().FirstOrDefault(property => property.Name.ToLowerInvariant().Equals(field.ToLowerInvariant()));
+                    var property = typeof(T).GetProperties().FirstOrDefault(property => property.Name.Equals(field, StringComparison.InvariantCultureIgnoreCase));
 
-                    if(property != null && property.GetCustomAttribute<JsonIgnoreAttribute>() == null)
+                    if (property != null && property.GetCustomAttribute<JsonIgnoreAttribute>() == null)
                     {
                         dynamicItemCollection.Add(new KeyValuePair<string, object>(property.Name, property.GetValue(item)));
                     }
