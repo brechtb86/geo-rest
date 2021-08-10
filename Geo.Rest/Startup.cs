@@ -135,11 +135,8 @@ namespace Geo.Rest
             {
                 context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
                 {
-                    Public = true,
-                    MaxAge = TimeSpan.FromDays(1)                    
-                };
-
-                context.Response.Headers[HeaderNames.Vary] = new string[] { "Accept-Encoding" };
+                    Public = true
+                };               
 
                 await next();
             });

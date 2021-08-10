@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Geo.Rest.Controllers.Api
 {
     [ReturnFriendlyExceptions]
+    [ResponseCache(Duration = 86400, VaryByQueryKeys = new[] { "*" })]
     public abstract class BaseController : Controller
     {
 
