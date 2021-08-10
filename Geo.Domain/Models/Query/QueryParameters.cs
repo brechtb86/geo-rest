@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Geo.Rest.Domain.Models.Query
 {
-    public abstract class QueryParameters
+    public class QueryParameters
     {
         /// <summary>
         /// The two letter ISO code for the language, optional. Possible values: br, de, es, fa, fr, hr, it, ja, kr, nl, pt, zh. If an invalid value was given the default of "en" will be used.
