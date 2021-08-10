@@ -172,11 +172,11 @@ namespace Geo.Rest.Business.Services
 
             var originalExpression = entityPropertyMap.CustomMapExpression;
 
+            var originalExpressionBody = entityPropertyMap.CustomMapExpression.Body;
+
             var originalExpressionParameter = originalExpression.Parameters.First();
-
-            var filterPropertyExpression = Expression.Property(originalExpressionParameter, entityPropertyMap.SourceMember.Name);
-
-            var filterPropertyExpressionToString = Expression.Call(filterPropertyExpression, typeof(object).GetMethod("ToString", Type.EmptyTypes));
+                
+            var filterPropertyExpressionToString = Expression.Call(originalExpressionBody, typeof(object).GetMethod("ToString", Type.EmptyTypes));
 
             var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
 
