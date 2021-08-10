@@ -40,12 +40,7 @@ namespace Geo.Rest.Business.Services
 
         public async Task<WrappedCollection<Country>> GetCountriesAsync(CollectionQueryParameters parameters)
         {
-            var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, parameters.Language, StringComparison.CurrentCultureIgnoreCase));
-
-            if (cultureInfo != null)
-            {
-                Thread.CurrentThread.CurrentCulture = cultureInfo;
-            }
+            this.SetCurrentCulture(parameters);
 
             var countryEntities = this._geoContext.Countries
                 .Include(country => country.CountryTimeZones)
@@ -60,14 +55,9 @@ namespace Geo.Rest.Business.Services
             return this._mapper.Map<WrappedCollection<Country>>(await countryEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize));
         }
 
-        public async Task<Country> GetCountryByIdAsync(int countryId, ItemQueryParameters parameters)
+        public async Task<Country> GetCountryByIdAsync(int countryId, QueryParameters parameters)
         {
-            var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, parameters.Language, StringComparison.CurrentCultureIgnoreCase));
-
-            if (cultureInfo != null)
-            {
-                Thread.CurrentThread.CurrentCulture = cultureInfo;
-            }
+            this.SetCurrentCulture(parameters);
 
             var countryEntity = await this._geoContext.Countries
                  .Include(country => country.CountryTimeZones)
@@ -82,14 +72,9 @@ namespace Geo.Rest.Business.Services
             return this._mapper.Map<Country>(countryEntity);
         }
 
-        public async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, ItemQueryParameters parameters)
+        public async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, QueryParameters parameters)
         {
-            var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, parameters.Language, StringComparison.CurrentCultureIgnoreCase));
-
-            if (cultureInfo != null)
-            {
-                Thread.CurrentThread.CurrentCulture = cultureInfo;
-            }
+            this.SetCurrentCulture(parameters);
 
             var countryEntity = await this._geoContext.Countries
                 .Include(country => country.CountryTimeZones)

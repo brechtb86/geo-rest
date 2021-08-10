@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Geo.Rest.Domain.Models.Query
 {
-    public class CollectionQueryParameters : ItemQueryParameters
+    public class CollectionQueryParameters : QueryParameters
     {
         private int _maxPageSize = QueryParameterConstants.MaxPageSize;
         private int _pageSize = QueryParameterConstants.PageSize;

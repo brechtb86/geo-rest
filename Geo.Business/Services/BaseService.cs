@@ -3,6 +3,7 @@ using Geo.Rest.Business.Extensions;
 using Geo.Rest.Domain.Constants;
 using Geo.Rest.Domain.Exceptions;
 using Geo.Rest.Domain.Models.Geo;
+using Geo.Rest.Domain.Models.Query;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,6 +24,24 @@ namespace Geo.Rest.Business.Services
             this._mapper = mapper;
         }
 
+        protected void SetCurrentCulture(QueryParameters parameters)
+        {
+            var language = (parameters.Language ?? "en").ToLower();
+
+            switch (language)
+            {
+                case "cn": language = "zh"; break;
+                default: language = "en"; break;
+            }
+
+            var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, language, StringComparison.CurrentCultureIgnoreCase));
+
+            if (cultureInfo != null)
+            {
+                Thread.CurrentThread.CurrentCulture = cultureInfo;
+            }
+        }
+
         protected IQueryable<TEntity> TrySortBy<TModel, TEntity>(IQueryable<TEntity> entities, string sortBy, string sortDirection)
             where TModel : Base
         {
@@ -38,7 +57,7 @@ namespace Geo.Rest.Business.Services
             if (sortByProperty == null)
             {
                 throw new SortException(sortBy,
-                    $"There is no property with name '{sortBy}' to sort by. The name of the property is case sensitive, please check the spelling.");
+                    $"There is no property with name '{sortBy}' to sort by, please check the spelling.");
             }
 
             // Check if property is a simple type

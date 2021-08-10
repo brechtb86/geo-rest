@@ -16,18 +16,15 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Geo.Rest.Domain.Models.Query
 {
-    public abstract class ItemQueryParameters
+    public abstract class QueryParameters
     {
         /// <summary>
-        /// The two letter isocode for the language, optional. Possible values: br, cn, de, es, fa, fr, hr, it, ja, kr, nl, pt. If an invalid value was given the default of "en" will be used.
+        /// The two letter ISO code for the language, optional. Possible values: br, de, es, fa, fr, hr, it, ja, kr, nl, pt, zh. If an invalid value was given the default of "en" will be used.
         /// </summary>
         /// <value>
         /// The language.
         /// </value>
-        public string Language
-        {
-            get; set;
-        }
+        public string Language { get; set; }
 
         /// <summary>
         /// A pipe-seperated list of the fields that should be returned (e.g. name|id|createdAt).

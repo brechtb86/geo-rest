@@ -42,7 +42,7 @@ namespace Geo.Rest.Controllers.Api
         [Produces("application/json")]
         [ProducesResponseType(typeof(Country), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountryByIdAsync(int countryId, [FromQuery] ItemQueryParameters parameters)
+        public async Task<IActionResult> GetCountryByIdAsync(int countryId, [FromQuery] QueryParameters parameters)
         {
             var country = await _geoService.GetCountryByIdAsync(countryId, parameters);
 
@@ -60,7 +60,7 @@ namespace Geo.Rest.Controllers.Api
         [Produces("application/json")]
         [ProducesResponseType(typeof(Country), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, [FromQuery] ItemQueryParameters parameters)
+        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, [FromQuery] QueryParameters parameters)
         {
             var country = await _geoService.GetCountryByTwoLetterIsoCodeAsync(twoLetterIsoCode, parameters);
 
