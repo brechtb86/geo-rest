@@ -30,8 +30,7 @@ namespace Geo.Rest.Business.Services
 
             switch (language)
             {
-                case "cn": language = "zh"; break;
-                default: language = "en"; break;
+                case "cn": language = "zh"; break;                
             }
 
             var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, language, StringComparison.CurrentCultureIgnoreCase));
