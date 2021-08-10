@@ -45,16 +45,20 @@ namespace Geo.Rest.Business.Services
             var countryEntities = this._geoContext.Countries
                 .Include(country => country.CountryTimeZones)
                 .Include(country => country.CountryNameTranslations)
-                .AsQueryable();
+                .AsQueryable();           
 
             foreach(var filter in parameters.FiltersList)
             {
-                countryEntities = this.TryFilter<Country, Data.Entities.Geo.Country>(countryEntities, filter.FilterProperty, filter.FilterValue);
+                countryEntities = this.TryFilter<Country, Data.Entities.Geo.Country>(countryEntities, filter.FilterProperty, filter.FilterValue);                
             }
 
-            foreach(var sortBy in parameters.SortByList)
+            var sortCount = 0;
+
+            foreach (var sortBy in parameters.SortByList)
             {
-                countryEntities = this.TrySortBy<Country, Data.Entities.Geo.Country>(countryEntities, sortBy.SortProperty, sortBy.SortDirection);
+                countryEntities = this.TrySortBy<Country, Data.Entities.Geo.Country>(countryEntities, sortBy.SortProperty, sortBy.SortDirection, sortCount == 0);
+
+                sortCount++;
             }     
 
             return this._mapper.Map<WrappedCollection<Country>>(countryEntities.ToWrappedCollection(parameters.Page, parameters.PageSize));

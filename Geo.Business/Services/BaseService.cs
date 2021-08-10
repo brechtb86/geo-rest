@@ -30,7 +30,7 @@ namespace Geo.Rest.Business.Services
 
             switch (language)
             {
-                case "cn": language = "zh"; break;                
+                case "cn": language = "zh"; break;
             }
 
             var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, language, StringComparison.CurrentCultureIgnoreCase));
@@ -41,7 +41,7 @@ namespace Geo.Rest.Business.Services
             }
         }
 
-        protected IQueryable<TEntity> TrySortBy<TModel, TEntity>(IQueryable<TEntity> entities, string sortBy, string sortDirection)
+        protected IQueryable<TEntity> TrySortBy<TModel, TEntity>(IQueryable<TEntity> entities, string sortBy, string sortDirection, bool firstSort)
             where TModel : Base
         {
             Expression<Func<TEntity, object>> newSortByExpression = null;
@@ -104,14 +104,13 @@ namespace Geo.Rest.Business.Services
 
             var originalExpressionParameter = originalExpression.Parameters.First();
 
-            newSortByExpression = Expression.Lambda<Func<TEntity, object>>(originalExpressionBody, originalExpressionParameter);
+            newSortByExpression = Expression.Lambda<Func<TEntity, object>>(Expression.Convert(originalExpressionBody, typeof(object)), originalExpressionParameter);
 
             var cult = Thread.CurrentThread.CurrentCulture;
 
             return !string.Equals(sortDirection, QueryParameterConstants.SortDirectionDescending, StringComparison.InvariantCultureIgnoreCase)
-            ? entities is IOrderedQueryable<TEntity> orderedEntitiesToOrderBy ? orderedEntitiesToOrderBy.ThenBy(newSortByExpression) : entities.OrderBy(newSortByExpression)
-            : entities is IOrderedQueryable<TEntity> orderedEntitiesToOrderByDescending ? orderedEntitiesToOrderByDescending.ThenByDescending(newSortByExpression) : entities.OrderByDescending(newSortByExpression);
-
+            ? firstSort ? entities.OrderBy(newSortByExpression) : (entities as IOrderedQueryable<TEntity>).ThenBy(newSortByExpression)
+            : firstSort ? entities.OrderByDescending(newSortByExpression) : (entities as IOrderedQueryable<TEntity>).ThenByDescending(newSortByExpression);
         }
 
         protected IQueryable<TEntity> TryFilter<TModel, TEntity>(IQueryable<TEntity> entities, string filter, string filterValue)
@@ -171,10 +170,10 @@ namespace Geo.Rest.Business.Services
                 p.IsMapped && p.DestinationMember != null &&
                 p.DestinationMember.Name == modelPropertyMap.DestinationMember.Name);
 
-            var originalExpression = entityPropertyMap.CustomMapExpression;          
+            var originalExpression = entityPropertyMap.CustomMapExpression;
 
             var originalExpressionParameter = originalExpression.Parameters.First();
-                        
+
             var filterPropertyExpression = Expression.Property(originalExpressionParameter, entityPropertyMap.SourceMember.Name);
 
             var filterPropertyExpressionToString = Expression.Call(filterPropertyExpression, typeof(object).GetMethod("ToString", Type.EmptyTypes));
@@ -185,7 +184,7 @@ namespace Geo.Rest.Business.Services
 
             newFilterExpression = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, originalExpressionParameter);
 
-            return entities.Where(newFilterExpression.Compile()).AsQueryable();
+            return entities.Where(newFilterExpression.Compile()).AsQueryable() as IQueryable<TEntity>;
         }
     }
 }
