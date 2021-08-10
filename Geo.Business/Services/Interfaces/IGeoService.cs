@@ -11,11 +11,11 @@ namespace Geo.Rest.Business.Services.Interfaces
 {
     public interface IGeoService
     {
-        Task<WrappedCollection<Country>> GetCountriesAsync(CountryCollectionQueryParameters parameters);
+        Task<WrappedCollection<Country>> GetCountriesAsync(CollectionQueryParameters parameters);
 
-        Task<Country> GetCountryByIdAsync(int countryId, CountryItemQueryParameters parameters);
+        Task<Country> GetCountryByIdAsync(int countryId, ItemQueryParameters parameters);
 
-        Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, CountryItemQueryParameters parameters);
+        Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, ItemQueryParameters parameters);
 
         //Task<ICollection<State>> GetStatesAsync(CollectionQueryParameters parameters);
 

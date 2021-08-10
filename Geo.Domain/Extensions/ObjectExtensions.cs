@@ -7,13 +7,13 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Geo.Rest.Business.Extensions
+namespace Geo.Rest.Domain.Extensions
 {
     public static class ObjectExtensions
     {
-        public static dynamic SelectFields<T>(this T source, IEnumerable<string> fields)
+        public static dynamic SelectFields<T>(this T source, string pipeSeperatedFields)
         {
-            fields = fields != null && fields.Any() ? fields : typeof(T).GetProperties().Select(property => property.Name);
+            var fields = pipeSeperatedFields?.Split("|", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) ?? typeof(T).GetProperties().Select(property => property.Name);
 
             var dynamicItem = new ExpandoObject();
             var dynamicItemCollection = dynamicItem as ICollection<KeyValuePair<string, object>>;

@@ -1,21 +1,29 @@
 ﻿using AutoMapper;
+using Geo.Rest.Business.Extensions;
 using Geo.Rest.Business.Services.Interfaces;
 using Geo.Rest.Data.Contexts;
 using Geo.Rest.Data.Extensions;
+using Geo.Rest.Domain;
+using Geo.Rest.Domain.Constants;
+using Geo.Rest.Domain.Exceptions;
 using Geo.Rest.Domain.Models.Geo;
 using Geo.Rest.Domain.Models.Query;
 using Geo.Rest.Domain.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Geo.Rest.Business.Services
 {
-    public class GeoService : IGeoService
+    public class GeoService : BaseService, IGeoService
     {
         private readonly GeoContext _geoContext;
 
@@ -23,28 +31,44 @@ namespace Geo.Rest.Business.Services
 
         private readonly IWebHostEnvironment _environment;
 
-        public GeoService(GeoContext geoContext, IMapper mapper, IWebHostEnvironment environment)
+        public GeoService(GeoContext geoContext, IMapper mapper, IWebHostEnvironment environment) : base(mapper)
         {
             this._geoContext = geoContext;
             this._mapper = mapper;
             this._environment = environment;
         }
 
-        public async Task<WrappedCollection<Country>> GetCountriesAsync(CountryCollectionQueryParameters parameters)
+        public async Task<WrappedCollection<Country>> GetCountriesAsync(CollectionQueryParameters parameters)
         {
-            var countryEntities = await this._geoContext.Countries
+            var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, parameters.Language, StringComparison.CurrentCultureIgnoreCase));
+
+            if (cultureInfo != null)
+            {
+                Thread.CurrentThread.CurrentCulture = cultureInfo;
+            }
+
+            var countryEntities = this._geoContext.Countries
                 .Include(country => country.CountryTimeZones)
                 .Include(country => country.CountryNameTranslations)
-                .ToWrappedCollectionAsync(parameters.Page, parameters.PageSize);
+                .AsQueryable();
 
-            return this._mapper.Map<WrappedCollection<Country>>(countryEntities, opts =>
+            foreach(var sortBy in parameters.SortByList)
             {
-                opts.Items.Add("language", parameters.Language ?? string.Empty);
-            });
+                countryEntities = this.TrySortBy<Country, Data.Entities.Geo.Country>(countryEntities, sortBy.SortProperty, sortBy.SortDirection);
+            }     
+
+            return this._mapper.Map<WrappedCollection<Country>>(await countryEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize));
         }
 
-        public async Task<Country> GetCountryByIdAsync(int countryId, CountryItemQueryParameters parameters)
+        public async Task<Country> GetCountryByIdAsync(int countryId, ItemQueryParameters parameters)
         {
+            var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, parameters.Language, StringComparison.CurrentCultureIgnoreCase));
+
+            if (cultureInfo != null)
+            {
+                Thread.CurrentThread.CurrentCulture = cultureInfo;
+            }
+
             var countryEntity = await this._geoContext.Countries
                  .Include(country => country.CountryTimeZones)
                  .Include(country => country.CountryNameTranslations)
@@ -55,14 +79,18 @@ namespace Geo.Rest.Business.Services
                 return null;
             }
 
-            return this._mapper.Map<Country>(countryEntity, opts =>
-            {
-                opts.Items.Add("language", parameters.Language ?? string.Empty);
-            });
+            return this._mapper.Map<Country>(countryEntity);
         }
 
-        public async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, CountryItemQueryParameters parameters)
+        public async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, ItemQueryParameters parameters)
         {
+            var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(culture => string.Equals(culture.TwoLetterISOLanguageName, parameters.Language, StringComparison.CurrentCultureIgnoreCase));
+
+            if (cultureInfo != null)
+            {
+                Thread.CurrentThread.CurrentCulture = cultureInfo;
+            }
+
             var countryEntity = await this._geoContext.Countries
                 .Include(country => country.CountryTimeZones)
                 .Include(country => country.CountryNameTranslations)
@@ -73,10 +101,7 @@ namespace Geo.Rest.Business.Services
                 return null;
             }
 
-            return this._mapper.Map<Country>(countryEntity, opts =>
-            {
-                opts.Items.Add("language", parameters.Language ?? string.Empty);
-            });
+            return this._mapper.Map<Country>(countryEntity);
         }
 
         public string GenerateExportScript(string databaseName = "Geo")
@@ -340,6 +365,6 @@ namespace Geo.Rest.Business.Services
             File.WriteAllText(fileName, exportScriptStringBuilder.ToString());
 
             return fileName;
-        }
+        }        
     }
 }

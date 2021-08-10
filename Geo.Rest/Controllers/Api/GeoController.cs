@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Geo.Rest.Business.Extensions;
+using System.Threading;
 
 namespace Geo.Rest.Controllers.Api
 {
@@ -26,11 +27,13 @@ namespace Geo.Rest.Controllers.Api
         [Produces("application/json")]
         [ProducesResponseType(typeof(WrappedCollection<Country>), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountriesAsync([FromQuery] CountryCollectionQueryParameters parameters)
+        public async Task<IActionResult> GetCountriesAsync([FromQuery] CollectionQueryParameters parameters)
         {
+            var cult = Thread.CurrentThread.CurrentCulture;
+
             var countries = await _geoService.GetCountriesAsync(parameters);
 
-            var dynamicCountries = countries.SelectFields(parameters.Fields);
+            var dynamicCountries = countries.SelectFields(parameters.FieldsList);
 
             return this.Ok(dynamicCountries);
         }
@@ -39,7 +42,7 @@ namespace Geo.Rest.Controllers.Api
         [Produces("application/json")]
         [ProducesResponseType(typeof(Country), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountryByIdAsync(int countryId, [FromQuery] CountryItemQueryParameters parameters)
+        public async Task<IActionResult> GetCountryByIdAsync(int countryId, [FromQuery] ItemQueryParameters parameters)
         {
             var country = await _geoService.GetCountryByIdAsync(countryId, parameters);
 
@@ -48,7 +51,7 @@ namespace Geo.Rest.Controllers.Api
                 return this.NotFound($"The requested endpoint is correct but a country with id '{countryId}' cannot be found");
             }
 
-            var dynamicCountry = country.SelectFields(parameters.Fields);
+            var dynamicCountry = country.SelectFields(parameters.FieldsList);
 
             return this.Ok(dynamicCountry);
         }
@@ -57,7 +60,7 @@ namespace Geo.Rest.Controllers.Api
         [Produces("application/json")]
         [ProducesResponseType(typeof(Country), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, [FromQuery] CountryItemQueryParameters parameters)
+        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, [FromQuery] ItemQueryParameters parameters)
         {
             var country = await _geoService.GetCountryByTwoLetterIsoCodeAsync(twoLetterIsoCode, parameters);
 
@@ -66,7 +69,7 @@ namespace Geo.Rest.Controllers.Api
                 return this.NotFound($"The requested endpoint is correct but a country with two letter isocode '{twoLetterIsoCode}' cannot be found");
             }
 
-            var dynamicCountry = country.SelectFields(parameters.Fields);
+            var dynamicCountry = country.SelectFields(parameters.FieldsList);
 
             return this.Ok(dynamicCountry);
         }

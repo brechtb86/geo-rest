@@ -30,4 +30,8 @@
     <ProjectReference Include="..\Geo.Domain\Geo.Rest.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
+
 </Project>

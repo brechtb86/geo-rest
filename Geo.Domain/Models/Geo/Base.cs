@@ -55,5 +55,13 @@ namespace Geo.Rest.Domain.Models.Geo
         /// The wiki data identifier.
         /// </value>
         public string WikiDataId { get; set; }
+
+        /// <summary>
+        /// The language.
+        /// </summary>
+        /// <value>
+        /// The language.
+        /// </value>
+        public string Language { get; set; }
     }
 }

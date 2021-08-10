@@ -11,7 +11,7 @@ namespace Geo.Rest.Domain.Constants
         public const int PageSize = 25;
         public const int MaxPageSize = 275;
         public const string SortBy = "id";
-        public const string SortAscending = "asc";
-        public const string SortDescending = "desc";
+        public const string SortDirectionAscending = "asc";
+        public const string SortDirectionDescending = "desc";
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -24,6 +25,8 @@ namespace Geo.Rest
         {
             this.Configuration = configuration;
             this.Environment = environment;
+
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");           
         }
 
         public IWebHostEnvironment Environment { get; }
