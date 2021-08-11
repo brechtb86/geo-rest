@@ -16,7 +16,7 @@ namespace Geo.Rest.Data.Extensions
 
             var count = source.Count();
 
-            if(source is IQueryable<T> queryableSource)
+            if (source is IQueryable<T> queryableSource && source is not EnumerableQuery<T>)
             {
                 items = await queryableSource.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             }
