@@ -19,7 +19,7 @@ namespace Geo.Rest.Domain.Models.Query
     public class QueryParameters
     {
         /// <summary>
-        /// The two letter ISO code for the language, optional. Possible values: br, de, es, fa, fr, hr, it, ja, kr, nl, pt, zh. If an invalid value was given the default of "en" will be used.
+        /// The two letter ISO code for the language, optional. Possible values: br, de, en, es, fa, fr, hr, it, ja, kr, nl, pt, zh (cn). If an invalid value was given the default of "en" will be used.
         /// </summary>
         /// <value>
         /// The language.

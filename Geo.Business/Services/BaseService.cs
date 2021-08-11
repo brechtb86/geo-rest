@@ -26,8 +26,14 @@ namespace Geo.Rest.Business.Services
 
         protected void SetCurrentCulture(QueryParameters parameters)
         {
-            var language = (parameters.Language ?? "en").ToLower();
+            var language = parameters.Language?.ToLower();
 
+            if (!new[] { "br", "cn", "de", "en", "es", "fa", "fr", "hr", "it", "ja", "kr", "nl", "pt", "zh" }.Contains(language))
+            {
+                language = "en";
+            }            
+
+            // Fix for "cn"
             switch (language)
             {
                 case "cn": language = "zh"; break;
@@ -41,150 +47,134 @@ namespace Geo.Rest.Business.Services
             }
         }
 
-        protected IQueryable<TEntity> TrySortBy<TModel, TEntity>(IQueryable<TEntity> entities, string sortBy, string sortDirection, bool firstSort)
-            where TModel : Base
+        protected IQueryable<TEntity> TrySortBy<TEntity>(IQueryable<TEntity> entities, CollectionQueryParameters parameters)
         {
-            Expression<Func<TEntity, object>> newSortByExpression = null;
+            var sortCount = 0;
 
-            if (string.IsNullOrEmpty(sortBy) || string.IsNullOrEmpty(sortDirection))
+            foreach (var sortBy in parameters.SortByList)
             {
-                return entities;
+                if (string.IsNullOrEmpty(sortBy.SortProperty) || string.IsNullOrEmpty(sortBy.SortDirection))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var (sortByPropertyExpression, sortByParameterExpression) = this.GetPropertyExpression<TEntity>(sortBy.SortProperty);
+
+                    var newSortByPropertyExpression = Expression.Lambda<Func<TEntity, object>>(sortByPropertyExpression, sortByParameterExpression);
+                            
+                    entities = !string.Equals(sortBy.SortDirection, QueryParameterConstants.SortDirectionDescending, StringComparison.InvariantCultureIgnoreCase)
+                    ? sortCount == 0 ? entities.OrderBy(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenBy(newSortByPropertyExpression)
+                    : sortCount == 0 ? entities.OrderByDescending(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenByDescending(newSortByPropertyExpression);
+
+                    sortCount++;
+                }
+                catch (NotImplementedException notImplementedException)
+                {
+                    throw new NotImplementedException($"Sorting by '{sortBy.SortProperty}' is not supported yet!", notImplementedException);
+                }
+                catch (PropertyIsNotSimpleTypeException propertyIsNotSimpleTypeException)
+                {
+                    throw new NotImplementedException($"Sorting by '{sortBy.SortProperty}' is not supported yet!", propertyIsNotSimpleTypeException);
+                }
+                catch (PropertyNotMappedException propertyNotMappedException)
+                {
+                    throw new NotImplementedException($"Sorting by '{sortBy.SortProperty}' is not supported yet!", propertyNotMappedException);
+                }
+                catch (PropertyDoesNotExistException propertyDoesNotExistException)
+                {
+                    throw new SortException(sortBy.SortProperty, $"There is no property with name '{sortBy.SortProperty}' to sort by, please check the spelling.", propertyDoesNotExistException);
+                }
             }
 
-            var sortByProperty = typeof(TModel).GetProperties().FirstOrDefault(property => property.Name.Equals(sortBy, StringComparison.InvariantCultureIgnoreCase));
-
-            if (sortByProperty == null)
-            {
-                throw new SortException(sortBy,
-                    $"There is no property with name '{sortBy}' to sort by, please check the spelling.");
-            }
-
-            // Check if property is a simple type
-            if (!sortByProperty.PropertyType.IsSimpleType())
-            {
-                throw new NotImplementedException("Sorting by complex types is not supported yet.");
-            }
-
-            var typeMaps = this._mapper.ConfigurationProvider.GetAllTypeMaps().AsQueryable();
-
-            // Get the mapping between our model and entity class with a property of sortBy
-            // This should be null if our mapping profiles are done correctly (see unit tests for that)
-            var modelTypeMap = typeMaps.Where(t => t.DestinationType == typeof(TModel)).FirstOrDefault(t =>
-                t.PropertyMaps.Any(p =>
-                    p.IsMapped && p.DestinationMember != null && p.DestinationMember.Name == sortByProperty.Name));
-
-            if (modelTypeMap == null)
-            {
-                throw new NotImplementedException($"Sorting by '{sortBy}' is not supported yet.");
-            }
-
-            var modelPropertyMap = modelTypeMap.PropertyMaps.First(p =>
-                p.IsMapped && p.DestinationMember != null && p.DestinationMember.Name == sortByProperty.Name);
-
-            // Get the reverse mapping between our model and entity class with a property of sortBy
-            // This should be null if our mapping profiles are done correctly (see unit tests for that)
-            var entityTypeMap = typeMaps
-                .Where(t => t.SourceType == typeof(TEntity) && t.DestinationType == modelTypeMap.DestinationType)
-                .FirstOrDefault(t => t.PropertyMaps.Any(p =>
-                    p.IsMapped && p.DestinationMember != null &&
-                    p.DestinationMember.Name == modelPropertyMap.DestinationMember.Name));
-
-            if (entityTypeMap == null)
-            {
-                throw new NotImplementedException($"Sorting by '{sortBy}' is not supported yet.");
-            }
-
-            var entityPropertyMap = entityTypeMap.PropertyMaps.First(p =>
-                p.IsMapped && p.DestinationMember != null &&
-                p.DestinationMember.Name == modelPropertyMap.DestinationMember.Name);
-
-            var originalExpression = entityPropertyMap.CustomMapExpression;
-
-            var originalExpressionBody = originalExpression.Body;
-
-            var originalExpressionParameter = originalExpression.Parameters.First();
-
-            newSortByExpression = Expression.Lambda<Func<TEntity, object>>(Expression.Convert(originalExpressionBody, typeof(object)), originalExpressionParameter);
-
-            var cult = Thread.CurrentThread.CurrentCulture;
-
-            return !string.Equals(sortDirection, QueryParameterConstants.SortDirectionDescending, StringComparison.InvariantCultureIgnoreCase)
-            ? firstSort ? entities.OrderBy(newSortByExpression) : (entities as IOrderedQueryable<TEntity>).ThenBy(newSortByExpression)
-            : firstSort ? entities.OrderByDescending(newSortByExpression) : (entities as IOrderedQueryable<TEntity>).ThenByDescending(newSortByExpression);
+            return entities;
         }
 
-        protected IQueryable<TEntity> TryFilter<TModel, TEntity>(IQueryable<TEntity> entities, string filter, string filterValue)
-            where TModel : Base
+        protected IQueryable<TEntity> TryFilter<TEntity>(IQueryable<TEntity> entities, CollectionQueryParameters parameters)
         {
-            Expression<Func<TEntity, bool>> newFilterExpression = null;
-
-            if (string.IsNullOrEmpty(filter) || filterValue == null)
+            foreach (var filter in parameters.FiltersList)
             {
-                return entities;
+                if (string.IsNullOrEmpty(filter.FilterProperty) || string.IsNullOrEmpty(filter.FilterProperty))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var (filterPropertyExpression, filterParameterExpression) = this.GetPropertyExpression<TEntity>(filter.FilterProperty);
+
+                    var filterPropertyExpressionToString = Expression.Call(filterPropertyExpression, typeof(object).GetMethod("ToString", Type.EmptyTypes));
+
+                    var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
+
+                    var filterPropertyExpressionContains = Expression.Call(filterPropertyExpressionToLower, typeof(string).GetMethod("Contains", new[] { typeof(string) }), Expression.Constant(filter.FilterValue, typeof(string)));
+
+                    var newFilterExpression = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, filterParameterExpression);
+
+                    entities = entities.Where(newFilterExpression.Compile()).AsQueryable();
+                }
+                catch (NotImplementedException notImplementedException)
+                {
+                    throw new NotImplementedException($"Filtering by '{filter.FilterProperty}' is not supported yet!", notImplementedException);
+                }
+                catch (PropertyIsNotSimpleTypeException propertyIsNotSimpleTypeException)
+                {
+                    throw new NotImplementedException($"Filtering by '{filter.FilterProperty}' is not supported yet!", propertyIsNotSimpleTypeException);
+                }
+                catch (PropertyNotMappedException propertyNotMappedException)
+                {
+                    throw new NotImplementedException($"Filtering by '{filter.FilterProperty}' is not supported yet!", propertyNotMappedException);
+                }
+                catch (PropertyDoesNotExistException propertyDoesNotExistException)
+                {
+                    throw new FilterException(filter.FilterProperty, $"There is no property with name '{filter.FilterProperty}' to filter by, please check the spelling.", propertyDoesNotExistException);
+                }
             }
 
-            var filterProperty = typeof(TModel).GetProperties().FirstOrDefault(property => property.Name.Equals(filter, StringComparison.InvariantCultureIgnoreCase));
+            return entities;
+        }
 
-            if (filterProperty == null)
+        private (Expression PropertyExpression, ParameterExpression ParameterExpresiion) GetPropertyExpression<TEntity>(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
             {
-                throw new FilterException(filter,
-                    $"There is no property with name '{filter}' to filter by, please check the spelling.");
-            }
-
-            // Check if property is a simple type
-            if (!filterProperty.PropertyType.IsSimpleType())
-            {
-                throw new NotImplementedException("Filtering by complex types is not supported yet.");
+                throw new ArgumentNullException(nameof(propertyName), $"The '{nameof(propertyName)}' cannot be null or empty.");
             }
 
             var typeMaps = this._mapper.ConfigurationProvider.GetAllTypeMaps().AsQueryable();
 
-            // Get the mapping between our model and entity class with a property of sortBy
-            // This should be null if our mapping profiles are done correctly (see unit tests for that)
-            var modelTypeMap = typeMaps.Where(t => t.DestinationType == typeof(TModel)).FirstOrDefault(t =>
-                t.PropertyMaps.Any(p =>
-                    p.IsMapped && p.DestinationMember != null && p.DestinationMember.Name == filterProperty.Name));
-
-            if (modelTypeMap == null)
-            {
-                throw new NotImplementedException($"Filtering by '{filter}' is not supported yet.");
-            }
-
-            var modelPropertyMap = modelTypeMap.PropertyMaps.First(p =>
-                p.IsMapped && p.DestinationMember != null && p.DestinationMember.Name == filterProperty.Name);
-
-            // Get the reverse mapping between our model and entity class with a property of sortBy
-            // This should be null if our mapping profiles are done correctly (see unit tests for that)
-            var entityTypeMap = typeMaps
-                .Where(t => t.SourceType == typeof(TEntity) && t.DestinationType == modelTypeMap.DestinationType)
-                .FirstOrDefault(t => t.PropertyMaps.Any(p =>
-                    p.IsMapped && p.DestinationMember != null &&
-                    p.DestinationMember.Name == modelPropertyMap.DestinationMember.Name));
+            var entityTypeMap = this._mapper.ConfigurationProvider.GetAllTypeMaps().AsQueryable().FirstOrDefault(t => t.SourceType == typeof(TEntity));
 
             if (entityTypeMap == null)
             {
-                throw new NotImplementedException($"Filtering by '{filter}' is not supported yet.");
+                throw new NotImplementedException();
             }
 
-            var entityPropertyMap = entityTypeMap.PropertyMaps.First(p =>
-                p.IsMapped && p.DestinationMember != null &&
-                p.DestinationMember.Name == modelPropertyMap.DestinationMember.Name);
+            var property = entityTypeMap.DestinationType.GetProperties().FirstOrDefault(property => property.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (property == null)
+            {
+                throw new PropertyDoesNotExistException($"The propery '{propertyName}' was not found.");
+            }
+                       
+            if (!property.PropertyType.IsSimpleType())
+            {
+                throw new PropertyIsNotSimpleTypeException("Sorting by complex types is not supported yet.");
+            }
+
+            var entityPropertyMap = entityTypeMap.PropertyMaps.First(p => p.IsMapped && p.DestinationMember != null && p.DestinationMember.Name == property.Name);
+
+            if (entityPropertyMap == null)
+            {
+                throw new PropertyNotMappedException($"The property '{propertyName} is not mapped.'");
+            }
 
             var originalExpression = entityPropertyMap.CustomMapExpression;
 
-            var originalExpressionBody = entityPropertyMap.CustomMapExpression.Body;
+            var originalParameterExpression = originalExpression.Parameters.First();
 
-            var originalExpressionParameter = originalExpression.Parameters.First();
-                
-            var filterPropertyExpressionToString = Expression.Call(originalExpressionBody, typeof(object).GetMethod("ToString", Type.EmptyTypes));
-
-            var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
-
-            var filterPropertyExpressionContains = Expression.Call(filterPropertyExpressionToLower, typeof(string).GetMethod("Contains", new[] { typeof(string) }), Expression.Constant(filterValue, typeof(string)));
-
-            newFilterExpression = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, originalExpressionParameter);
-
-            return entities.Where(newFilterExpression.Compile()).AsQueryable() as IQueryable<TEntity>;
+            return (originalExpression.Body, originalExpression.Parameters.FirstOrDefault());            
         }
     }
 }
