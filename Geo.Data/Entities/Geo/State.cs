@@ -17,7 +17,7 @@ namespace Geo.Rest.Data.Entities.Geo
         public int CountryId { get; set; }
         public string CountryCode { get; set; }
         public string FipsCode { get; set; }
-        public string TwoLetterIsoCode { get; set; }
+        public string IsoCode { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public DateTime? CreatedAt { get; set; }

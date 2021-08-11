@@ -72,6 +72,58 @@ namespace Geo.Rest.Controllers.Api
             return this.Ok(dynamicCountry);
         }
 
+        [HttpGet("countries/{countryId:int}/states")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(WrappedCollection<State>), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetStatesByCountryAsync(int countryId, [FromQuery] CollectionQueryParameters parameters)
+        {
+            var states = await _geoService.GetStatesByCountryAsync(countryId, parameters);
+            
+            var dynamiStates = states.SelectFields(parameters.FieldsList);
+
+            return this.Ok(dynamiStates);
+        }
+
+        [HttpGet("countries/{countryCode}/states")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(WrappedCollection<State>), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetStatesByCountryAsync(string countryCode, [FromQuery] CollectionQueryParameters parameters)
+        {
+            var states = await _geoService.GetStatesByCountryAsync(countryCode, parameters);
+
+            var dynamiStates = states.SelectFields(parameters.FieldsList);
+
+            return this.Ok(dynamiStates);
+        }
+
+        [HttpGet("countries/{countryId:int}/cities")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(WrappedCollection<City>), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetCitiesByCountryAsync(int countryId, [FromQuery] CollectionQueryParameters parameters)
+        {
+            var cities = await _geoService.GetCitiesByCountryAsync(countryId, parameters);
+
+            var dynamicCities = cities.SelectFields(parameters.FieldsList);
+
+            return this.Ok(dynamicCities);
+        }
+
+        [HttpGet("countries/{countryCode}/cities")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(WrappedCollection<City>), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetCitiesByCountryAsync(string countryCode, [FromQuery] CollectionQueryParameters parameters)
+        {
+            var cities = await _geoService.GetCitiesByCountryAsync(countryCode, parameters);
+
+            var dynamicCities = cities.SelectFields(parameters.FieldsList);
+
+            return this.Ok(dynamicCities);
+        }
+
         //[HttpGet("states")]
         //[Produces("application/json")]
         //[ProducesResponseType(typeof(PagedCollection<State>), 200)]

@@ -15,6 +15,14 @@ namespace Geo.Rest.Domain.Models.Geo
         }
 
         /// <summary>
+        /// The language.
+        /// </summary>
+        /// <value>
+        /// The language.
+        /// </value>
+        public string Language { get; set; }
+
+        /// <summary>
         /// The translated name based on the language parameter.
         /// </summary>
         /// <value>
@@ -119,22 +127,6 @@ namespace Geo.Rest.Domain.Models.Geo
         /// The sub region.
         /// </value>
         public string SubRegion { get; set; }
-
-        /// <summary>
-        /// The latitude.
-        /// </summary>
-        /// <value>
-        /// The latitude.
-        /// </value>
-        public decimal? Latitude { get; set; }
-
-        /// <summary>
-        /// The longitude.
-        /// </summary>
-        /// <value>
-        /// The longitude.
-        /// </value>
-        public decimal? Longitude { get; set; }
 
         /// <summary>
         /// The emoji.

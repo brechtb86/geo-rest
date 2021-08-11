@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Geo.Rest.Domain.Models.Geo
 {
     public abstract class Base
-    {
+    {     
         /// <summary>
         /// The identifier.
         /// </summary>
@@ -33,6 +33,30 @@ namespace Geo.Rest.Domain.Models.Geo
         public short Flag { get; set; }
 
         /// <summary>
+        /// The latitude.
+        /// </summary>
+        /// <value>
+        /// The latitude.
+        /// </value>
+        public decimal? Latitude { get; set; }
+
+        /// <summary>
+        /// The longitude.
+        /// </summary>
+        /// <value>
+        /// The longitude.
+        /// </value>
+        public decimal? Longitude { get; set; }
+
+        /// <summary>
+        /// The wiki data identifier.
+        /// </summary>
+        /// <value>
+        /// The wiki data identifier.
+        /// </value>
+        public string WikiDataId { get; set; }       
+
+        /// <summary>
         /// The created at date.
         /// </summary>
         /// <value>
@@ -48,20 +72,6 @@ namespace Geo.Rest.Domain.Models.Geo
         /// </value>
         public DateTime UpdatedAt { get; set; }
 
-        /// <summary>
-        /// The wiki data identifier.
-        /// </summary>
-        /// <value>
-        /// The wiki data identifier.
-        /// </value>
-        public string WikiDataId { get; set; }
-
-        /// <summary>
-        /// The language.
-        /// </summary>
-        /// <value>
-        /// The language.
-        /// </value>
-        public string Language { get; set; }
+       
     }
 }

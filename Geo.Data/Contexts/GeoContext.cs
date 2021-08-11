@@ -181,7 +181,7 @@ namespace Geo.Rest.Data.Contexts
                     .IsRequired()
                     .HasMaxLength(255);
 
-                entity.Property(e => e.TwoLetterIsoCode).HasMaxLength(255);
+                entity.Property(e => e.IsoCode).HasMaxLength(255);
 
                 entity.Property(e => e.UpdatedAt).HasColumnType("date");
 

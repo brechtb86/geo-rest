@@ -43,7 +43,9 @@ namespace Geo.Rest.Business.Services
 
             countryEntities = this.TrySortBy(countryEntities, parameters);
 
-            return this._mapper.Map<WrappedCollection<Country>>(countryEntities.ToWrappedCollection(parameters.Page, parameters.PageSize));
+            var result = await countryEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize) as Data.Shared.WrappedCollection<Data.Entities.Geo.Country>;
+
+            return this._mapper.Map<WrappedCollection<Country>>(result);
         }
 
         public async Task<Country> GetCountryByIdAsync(int countryId, QueryParameters parameters)
@@ -60,7 +62,9 @@ namespace Geo.Rest.Business.Services
                 return null;
             }
 
-            return this._mapper.Map<Country>(countryEntity);
+            var result = countryEntity;
+
+            return this._mapper.Map<Country>(result);
         }
 
         public async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, QueryParameters parameters)
@@ -77,7 +81,77 @@ namespace Geo.Rest.Business.Services
                 return null;
             }
 
-            return this._mapper.Map<Country>(countryEntity);
+            var result = countryEntity;
+
+            return this._mapper.Map<Country>(result);
+        }
+
+        public async Task<WrappedCollection<State>> GetStatesByCountryAsync(int countryId, CollectionQueryParameters parameters)
+        {
+            this.SetCurrentCulture(parameters);
+
+            var stateEntities = this._geoContext.States
+                .Where(state => state.CountryId == countryId)
+                .AsQueryable();
+
+            stateEntities = this.TryFilter(stateEntities, parameters);
+
+            stateEntities = this.TrySortBy(stateEntities, parameters);
+
+            var result = await stateEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize);
+
+            return this._mapper.Map<WrappedCollection<State>>(result);
+        }
+
+        public async Task<WrappedCollection<State>> GetStatesByCountryAsync(string countryCode, CollectionQueryParameters parameters)
+        {
+            this.SetCurrentCulture(parameters);
+
+            var stateEntities = this._geoContext.States
+                .Where(state => state.CountryCode.ToLower() == countryCode.ToLower())
+                .AsQueryable();
+
+            stateEntities = this.TryFilter(stateEntities, parameters);
+
+            stateEntities = this.TrySortBy(stateEntities, parameters);
+
+            var result = await stateEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize);
+
+            return this._mapper.Map<WrappedCollection<State>>(result);
+        }
+
+        public async Task<WrappedCollection<City>> GetCitiesByCountryAsync(int countryId, CollectionQueryParameters parameters)
+        {
+            this.SetCurrentCulture(parameters);
+
+            var cityEntities = this._geoContext.Cities
+                .Where(state => state.CountryId == countryId)
+                .AsQueryable();
+
+            cityEntities = this.TryFilter(cityEntities, parameters);
+
+            cityEntities = this.TrySortBy(cityEntities, parameters);
+
+            var result = await cityEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize);
+
+            return this._mapper.Map<WrappedCollection<City>>(result);
+        }
+
+        public async Task<WrappedCollection<City>> GetCitiesByCountryAsync(string countryCode, CollectionQueryParameters parameters)
+        {
+            this.SetCurrentCulture(parameters);
+
+            var cityEntities = this._geoContext.Cities
+                .Where(state => state.CountryCode == countryCode)
+                .AsQueryable();
+
+            cityEntities = this.TryFilter(cityEntities, parameters);
+
+            cityEntities = this.TrySortBy(cityEntities, parameters);
+
+            var result = await cityEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize);
+
+            return this._mapper.Map<WrappedCollection<City>>(result);
         }
 
         public string GenerateExportScript(string databaseName = "Geo")
@@ -165,14 +239,14 @@ namespace Geo.Rest.Business.Services
             exportScriptStringBuilder.AppendLine($"-- Table structure for table [dbo].[States]");
             exportScriptStringBuilder.AppendLine($"--");
             exportScriptStringBuilder.AppendLine($"DROP TABLE IF EXISTS [dbo].[States]");
-            exportScriptStringBuilder.AppendLine($"CREATE TABLE [dbo].[States] ([Id] int IDENTITY(1,1) NOT NULL, [Name] nvarchar(255) NOT NULL, [CountryId] int NOT NULL, [CountryCode] char(2) NOT NULL, [FipsCode] nvarchar(255) DEFAULT NULL, [TwoLetterIsoCode] nvarchar(255) DEFAULT NULL, [Latitude] decimal(11,8) DEFAULT NULL, [Longitude] decimal(11,8) DEFAULT NULL, [CreatedAt] date NULL DEFAULT NULL, [UpdatedAt] date NOT NULL, [Flag] smallint NOT NULL DEFAULT 1, [WikiDataId] nvarchar(255) DEFAULT NULL, CONSTRAINT [PK_States] PRIMARY KEY CLUSTERED ([Id] ASC)) ON [PRIMARY]");
+            exportScriptStringBuilder.AppendLine($"CREATE TABLE [dbo].[States] ([Id] int IDENTITY(1,1) NOT NULL, [Name] nvarchar(255) NOT NULL, [CountryId] int NOT NULL, [CountryCode] char(2) NOT NULL, [FipsCode] nvarchar(255) DEFAULT NULL, [IsoCode] nvarchar(255) DEFAULT NULL, [Latitude] decimal(11,8) DEFAULT NULL, [Longitude] decimal(11,8) DEFAULT NULL, [CreatedAt] date NULL DEFAULT NULL, [UpdatedAt] date NOT NULL, [Flag] smallint NOT NULL DEFAULT 1, [WikiDataId] nvarchar(255) DEFAULT NULL, CONSTRAINT [PK_States] PRIMARY KEY CLUSTERED ([Id] ASC)) ON [PRIMARY]");
             exportScriptStringBuilder.AppendLine($"--");
             exportScriptStringBuilder.AppendLine($"-- Dumping data for table [dbo].[States]");
             exportScriptStringBuilder.AppendLine($"--");
             exportScriptStringBuilder.AppendLine($"GO");
             exportScriptStringBuilder.AppendLine($"SET IDENTITY_INSERT [dbo].[States] ON");
             exportScriptStringBuilder.AppendLine($"GO");
-            exportScriptStringBuilder.AppendLine($"INSERT INTO [dbo].[States] ([Id], [Name], [CountryId], [CountryCode], [FipsCode], [TwoLetterIsoCode], [Latitude], [Longitude], [CreatedAt], [UpdatedAt], [Flag], [WikiDataId]) VALUES");
+            exportScriptStringBuilder.AppendLine($"INSERT INTO [dbo].[States] ([Id], [Name], [CountryId], [CountryCode], [FipsCode], [IsoCode], [Latitude], [Longitude], [CreatedAt], [UpdatedAt], [Flag], [WikiDataId]) VALUES");
 
             var statesCounter = 1;
             var statesTotalCount = this._geoContext.States.Count();
@@ -181,16 +255,16 @@ namespace Geo.Rest.Business.Services
             {
                 if (statesCounter % 100 != 0 && statesCounter < statesTotalCount)
                 {
-                    exportScriptStringBuilder.AppendLine($"({state.Id}, N'{state.Name}', {state.CountryId}, N'{state.CountryCode}', N'{state.FipsCode}', N'{state.TwoLetterIsoCode}', {state.Longitude?.ToString().Replace(",", ".") ?? "NULL" ?? "NULL"}, {state.Latitude?.ToString().Replace(",", ".") ?? "NULL"}, N'{state.CreatedAt?.ToString("yyyy-MM-dd hh:mm:ss")}', N'{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}', {state.Flag}, N'{state.WikiDataId}'),");
+                    exportScriptStringBuilder.AppendLine($"({state.Id}, N'{state.Name}', {state.CountryId}, N'{state.CountryCode}', N'{state.FipsCode}', N'{state.IsoCode}', {state.Longitude?.ToString().Replace(",", ".") ?? "NULL" ?? "NULL"}, {state.Latitude?.ToString().Replace(",", ".") ?? "NULL"}, N'{state.CreatedAt?.ToString("yyyy-MM-dd hh:mm:ss")}', N'{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}', {state.Flag}, N'{state.WikiDataId}'),");
                 }
                 else
                 {
-                    exportScriptStringBuilder.AppendLine($"({state.Id}, N'{state.Name}', {state.CountryId}, N'{state.CountryCode}', N'{state.FipsCode}', N'{state.TwoLetterIsoCode}',{state.Longitude?.ToString().Replace(",", ".") ?? "NULL"}, {state.Latitude?.ToString().Replace(",", ".") ?? "NULL"}, N'{state.CreatedAt?.ToString("yyyy-MM-dd hh:mm:ss")}', N'{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}', {state.Flag}, N'{state.WikiDataId}');");
+                    exportScriptStringBuilder.AppendLine($"({state.Id}, N'{state.Name}', {state.CountryId}, N'{state.CountryCode}', N'{state.FipsCode}', N'{state.IsoCode}',{state.Longitude?.ToString().Replace(",", ".") ?? "NULL"}, {state.Latitude?.ToString().Replace(",", ".") ?? "NULL"}, N'{state.CreatedAt?.ToString("yyyy-MM-dd hh:mm:ss")}', N'{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}', {state.Flag}, N'{state.WikiDataId}');");
 
                     if (statesCounter < statesTotalCount)
                     {
                         exportScriptStringBuilder.AppendLine($"GO");
-                        exportScriptStringBuilder.AppendLine($"INSERT INTO [dbo].[States] ([Id], [Name], [CountryId], [CountryCode], [FipsCode], [TwoLetterIsoCode], [Latitude], [Longitude], [CreatedAt], [UpdatedAt], [Flag], [WikiDataId]) VALUES");
+                        exportScriptStringBuilder.AppendLine($"INSERT INTO [dbo].[States] ([Id], [Name], [CountryId], [CountryCode], [FipsCode], [IsoCode], [Latitude], [Longitude], [CreatedAt], [UpdatedAt], [Flag], [WikiDataId]) VALUES");
                     }
                 }
 
@@ -341,6 +415,6 @@ namespace Geo.Rest.Business.Services
             File.WriteAllText(fileName, exportScriptStringBuilder.ToString());
 
             return fileName;
-        }
+        }      
     }
 }

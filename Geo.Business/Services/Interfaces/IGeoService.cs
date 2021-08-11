@@ -17,9 +17,13 @@ namespace Geo.Rest.Business.Services.Interfaces
 
         Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, QueryParameters parameters);
 
-        //Task<ICollection<State>> GetStatesAsync(CollectionQueryParameters parameters);
+        Task<WrappedCollection<State>> GetStatesByCountryAsync(int countryId, CollectionQueryParameters parameters);
 
-        //Task<State> GetStateByIdAsync(int id);
+        Task<WrappedCollection<State>> GetStatesByCountryAsync(string countrycode, CollectionQueryParameters parameters);
+
+        Task<WrappedCollection<City>> GetCitiesByCountryAsync(int countryId, CollectionQueryParameters parameters);
+
+        Task<WrappedCollection<City>> GetCitiesByCountryAsync(string countryCode, CollectionQueryParameters parameters);
 
         //Task<ICollection<State>> GetStatesByCountryIdAsync(int countryId);
 

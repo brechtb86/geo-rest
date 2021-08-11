@@ -110,9 +110,9 @@ namespace Geo.Rest.Business.Services
 
                     var filterPropertyExpressionContains = Expression.Call(filterPropertyExpressionToLower, typeof(string).GetMethod("Contains", new[] { typeof(string) }), Expression.Constant(filter.FilterValue, typeof(string)));
 
-                    var newFilterPropertyExpression = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, filterParameterExpression);
+                    var filterPropertyPredicate = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, filterParameterExpression).Compile();
 
-                    entities = entities.Where(newFilterPropertyExpression.Compile()).AsQueryable();
+                    entities = entities.Where(filterPropertyPredicate).AsQueryable();
                 }
                 catch (NotImplementedException notImplementedException)
                 {

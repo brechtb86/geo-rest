@@ -23,24 +23,8 @@ namespace Geo.Rest.Domain.Models.Geo
         /// Gets or sets the two letter iso code.
         /// </summary>
         /// <value>
-        /// The two letter iso code.
+        /// The iso code.
         /// </value>
-        public string TwoLetterIsoCode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the latitude.
-        /// </summary>
-        /// <value>
-        /// The latitude.
-        /// </value>
-        public decimal? Latitude { get; set; }
-
-        /// <summary>
-        /// Gets or sets the longitude.
-        /// </summary>
-        /// <value>
-        /// The longitude.
-        /// </value>
-        public decimal? Longitude { get; set; }
+        public string IsoCode { get; set; }       
     }
 }
