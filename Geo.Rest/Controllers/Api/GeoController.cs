@@ -29,8 +29,6 @@ namespace Geo.Rest.Controllers.Api
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetCountriesAsync([FromQuery] CollectionQueryParameters parameters)
         {
-            var cult = Thread.CurrentThread.CurrentCulture;
-
             var countries = await _geoService.GetCountriesAsync(parameters);
 
             var dynamicCountries = countries.SelectFields(parameters.FieldsList);

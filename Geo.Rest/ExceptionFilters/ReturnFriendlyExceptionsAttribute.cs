@@ -3,6 +3,7 @@ using Geo.Rest.Domain.Models.Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Data.SqlClient;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Geo.Rest.ExceptionFilters
         /// <inheritdoc />
         public override void OnException(ExceptionContext context)
         {
-            
+
             var request = context.HttpContext.Request;
 
             var requestUri = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
@@ -99,6 +100,8 @@ namespace Geo.Rest.ExceptionFilters
 
                     #endregion
             }
+
+            context.HttpContext.Response.Headers[HeaderNames.CacheControl] = "public,max-age=0";
 
             base.OnException(context);
         }

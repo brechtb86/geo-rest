@@ -1,24 +1,16 @@
 ﻿using AutoMapper;
-using Geo.Rest.Business.Extensions;
 using Geo.Rest.Business.Services.Interfaces;
 using Geo.Rest.Data.Contexts;
 using Geo.Rest.Data.Extensions;
-using Geo.Rest.Domain;
-using Geo.Rest.Domain.Constants;
-using Geo.Rest.Domain.Exceptions;
 using Geo.Rest.Domain.Models.Geo;
 using Geo.Rest.Domain.Models.Query;
 using Geo.Rest.Domain.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Geo.Rest.Business.Services
@@ -47,15 +39,15 @@ namespace Geo.Rest.Business.Services
                 .Include(country => country.CountryNameTranslations)
                 .AsQueryable();
 
-            countryEntities = this.TryFilter<Data.Entities.Geo.Country>(countryEntities, parameters);
+            countryEntities = this.TryFilter(countryEntities, parameters);
 
-            countryEntities = this.TrySortBy<Data.Entities.Geo.Country>(countryEntities, parameters);
+            countryEntities = this.TrySortBy(countryEntities, parameters);
 
             return this._mapper.Map<WrappedCollection<Country>>(countryEntities.ToWrappedCollection(parameters.Page, parameters.PageSize));
         }
 
         public async Task<Country> GetCountryByIdAsync(int countryId, QueryParameters parameters)
-        {
+        {           
             this.SetCurrentCulture(parameters);
 
             var countryEntity = await this._geoContext.Countries
