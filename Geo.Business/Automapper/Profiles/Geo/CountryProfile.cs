@@ -49,7 +49,7 @@ namespace Geo.Rest.Business.Automapper.Profiles.Geo
             this.CreateMap<Data.Entities.Geo.Country, Domain.Models.Geo.Country>()                
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
-                .ForMember(dest => dest.TranslatedName, opts => opts.MapFrom(src => src.CountryNameTranslations.Where(translation => translation.Language.ToLower() == Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName).Select(translation => translation.Value).FirstOrDefault()))
+                .ForMember(dest => dest.TranslatedName, opts => opts.MapFrom(src => src.CountryNameTranslations.Where(translation => translation.Language.ToLower() == Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName || translation.Language.ToLower() == "en").Select(translation => translation.Value).First()))
                 .ForMember(dest => dest.ThreeLetterIsoCode, opts => opts.MapFrom(src => src.ThreeLetterIsoCode))
                 .ForMember(dest => dest.NumericCode, opts => opts.MapFrom(src => src.NumericCode))
                 .ForMember(dest => dest.TwoLetterIsoCode, opts => opts.MapFrom(src => src.TwoLetterIsoCode))

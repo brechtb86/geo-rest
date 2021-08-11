@@ -95,7 +95,7 @@ namespace Geo.Rest.Business.Services
         {
             foreach (var filter in parameters.FiltersList)
             {
-                if (string.IsNullOrEmpty(filter.FilterProperty) || string.IsNullOrEmpty(filter.FilterProperty))
+                if (string.IsNullOrEmpty(filter.FilterProperty) || string.IsNullOrEmpty(filter.FilterValue))
                 {
                     continue;
                 }
@@ -103,16 +103,16 @@ namespace Geo.Rest.Business.Services
                 try
                 {
                     var (filterPropertyExpression, filterParameterExpression) = this.GetPropertyExpression<TEntity>(filter.FilterProperty);
-
+                             
                     var filterPropertyExpressionToString = Expression.Call(filterPropertyExpression, typeof(object).GetMethod("ToString", Type.EmptyTypes));
 
                     var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
 
                     var filterPropertyExpressionContains = Expression.Call(filterPropertyExpressionToLower, typeof(string).GetMethod("Contains", new[] { typeof(string) }), Expression.Constant(filter.FilterValue, typeof(string)));
 
-                    var newFilterExpression = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, filterParameterExpression);
+                    var newFilterPropertyExpression = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, filterParameterExpression);
 
-                    entities = entities.Where(newFilterExpression.Compile()).AsQueryable();
+                    entities = entities.Where(newFilterPropertyExpression.Compile()).AsQueryable();
                 }
                 catch (NotImplementedException notImplementedException)
                 {
@@ -170,11 +170,12 @@ namespace Geo.Rest.Business.Services
                 throw new PropertyNotMappedException($"The property '{propertyName} is not mapped.'");
             }
 
-            var originalExpression = entityPropertyMap.CustomMapExpression;
+            var originalExpression = entityPropertyMap.CustomMapExpression;            
 
-            var originalParameterExpression = originalExpression.Parameters.First();
+            var expression = Expression.Convert(originalExpression.Body, typeof(object));
+            var parameterExpression = originalExpression.Parameters.First();
 
-            return (originalExpression.Body, originalExpression.Parameters.FirstOrDefault());            
+            return (expression, parameterExpression);            
         }
     }
 }
