@@ -8,9 +8,23 @@ With this REST service you can query countries, states and cities, with very det
 
 This service is stil under development, this service should in no way be used in production!
 
-## Base URLs
+## Endpoints
 
-v1: https://geo-service.rest/api/v1/
+### v1
+
+https://geo-service.rest/api/v1/countries
+
+https://geo-service.rest/api/v1/countries/{countryId}
+
+https://geo-service.rest/api/v1/countries/{twoLetterIsoCode}
+
+https://geo-service.rest/api/v1/countries/{countryId}/states
+
+https://geo-service.rest/api/v1/countries/{twoLetterIsoCode}/states
+
+https://geo-service.rest/api/v1/countries/{countryId}/cities
+
+https://geo-service.rest/api/v1/countries/{twoLetterIsoCode}/cities
 
 ## Docs & tryout
 
