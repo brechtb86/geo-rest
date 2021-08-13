@@ -49,8 +49,6 @@ namespace Geo.Rest.Business.Services
 
         protected IQueryable<TEntity> TrySortBy<TEntity>(IQueryable<TEntity> entities, CollectionQueryParameters parameters)
         {
-            var sortCount = 0;
-
             foreach (var sortBy in parameters.SortByList)
             {
                 if (string.IsNullOrEmpty(sortBy.SortProperty) || string.IsNullOrEmpty(sortBy.SortDirection))
@@ -64,11 +62,10 @@ namespace Geo.Rest.Business.Services
 
                     var newSortByPropertyExpression = Expression.Lambda<Func<TEntity, object>>(sortByPropertyExpression, sortByParameterExpression);
 
-                    entities = !string.Equals(sortBy.SortDirection, QueryParameterConstants.SortDirectionDescending, StringComparison.InvariantCultureIgnoreCase)
-                    ? sortCount == 0 ? entities.OrderBy(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenBy(newSortByPropertyExpression)
-                    : sortCount == 0 ? entities.OrderByDescending(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenByDescending(newSortByPropertyExpression);
 
-                    sortCount++;
+                    entities = !string.Equals(sortBy.SortDirection, QueryParameterConstants.SortDirectionDescending, StringComparison.InvariantCultureIgnoreCase)
+                        ? entities != typeof(IOrderedQueryable<TEntity>) ? entities.OrderBy(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenBy(newSortByPropertyExpression)
+                        : entities != typeof(IOrderedQueryable<TEntity>) ? entities.OrderByDescending(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenByDescending(newSortByPropertyExpression);
                 }
                 catch (NotImplementedException notImplementedException)
                 {
@@ -106,7 +103,7 @@ namespace Geo.Rest.Business.Services
 
                     var filterPropertyExpressionToString = Expression.Call(filterPropertyExpression, "ToString", Type.EmptyTypes);
 
-                    var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, "ToLower" , Type.EmptyTypes);
+                    var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, "ToLower", Type.EmptyTypes);
 
                     var filterPropertyExpressionContains = Expression.Call(filterPropertyExpressionToLower, "Contains", Type.EmptyTypes, Expression.Constant(filter.FilterValue, typeof(string)));
 
