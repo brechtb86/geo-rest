@@ -31,7 +31,7 @@ namespace Geo.Rest.Business.Services
             if (!new[] { "br", "cn", "de", "en", "es", "fa", "fr", "hr", "it", "ja", "kr", "nl", "pt", "zh" }.Contains(language))
             {
                 language = "en";
-            }            
+            }
 
             // Fix for "cn"
             switch (language)
@@ -63,7 +63,7 @@ namespace Geo.Rest.Business.Services
                     var (sortByPropertyExpression, sortByParameterExpression) = this.GetPropertyExpression<TEntity>(sortBy.SortProperty);
 
                     var newSortByPropertyExpression = Expression.Lambda<Func<TEntity, object>>(sortByPropertyExpression, sortByParameterExpression);
-                            
+
                     entities = !string.Equals(sortBy.SortDirection, QueryParameterConstants.SortDirectionDescending, StringComparison.InvariantCultureIgnoreCase)
                     ? sortCount == 0 ? entities.OrderBy(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenBy(newSortByPropertyExpression)
                     : sortCount == 0 ? entities.OrderByDescending(newSortByPropertyExpression) : (entities as IOrderedQueryable<TEntity>).ThenByDescending(newSortByPropertyExpression);
@@ -103,16 +103,22 @@ namespace Geo.Rest.Business.Services
                 try
                 {
                     var (filterPropertyExpression, filterParameterExpression) = this.GetPropertyExpression<TEntity>(filter.FilterProperty);
-                             
-                    var filterPropertyExpressionToString = Expression.Call(filterPropertyExpression, typeof(object).GetMethod("ToString", Type.EmptyTypes));
 
-                    var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
+                    var filterPropertyExpressionToString = Expression.Call(filterPropertyExpression, "ToString", Type.EmptyTypes);
 
-                    var filterPropertyExpressionContains = Expression.Call(filterPropertyExpressionToLower, typeof(string).GetMethod("Contains", new[] { typeof(string) }), Expression.Constant(filter.FilterValue, typeof(string)));
+                    var filterPropertyExpressionToLower = Expression.Call(filterPropertyExpressionToString, "ToLower" , Type.EmptyTypes);
 
-                    var filterPropertyPredicate = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, filterParameterExpression).Compile();
+                    var filterPropertyExpressionContains = Expression.Call(filterPropertyExpressionToLower, "Contains", Type.EmptyTypes, Expression.Constant(filter.FilterValue, typeof(string)));
 
-                    entities = entities.Where(filterPropertyPredicate).AsQueryable();
+                    var filterPropertyExpressionIndexOf = Expression.Call(filterPropertyExpressionToLower, "IndexOf", Type.EmptyTypes, Expression.Constant(filter.FilterValue, typeof(string)));
+
+                    var filterPropertyWhere = Expression.Lambda<Func<TEntity, bool>>(filterPropertyExpressionContains, filterParameterExpression);
+
+                    var filterPropertyOrderBy = Expression.Lambda<Func<TEntity, int>>(filterPropertyExpressionIndexOf, filterParameterExpression);
+
+                    var filterPropertyThenBy = Expression.Lambda<Func<TEntity, int>>(Expression.Property(filterPropertyExpressionToLower, "Length"), filterParameterExpression); ;
+
+                    entities = entities.Where(filterPropertyWhere.Compile()).AsQueryable().OrderBy(filterPropertyOrderBy).ThenBy(filterPropertyThenBy);
                 }
                 catch (NotImplementedException notImplementedException)
                 {
@@ -157,7 +163,7 @@ namespace Geo.Rest.Business.Services
             {
                 throw new PropertyDoesNotExistException($"The propery '{propertyName}' was not found.");
             }
-                       
+
             if (!property.PropertyType.IsSimpleType())
             {
                 throw new PropertyIsNotSimpleTypeException("Sorting by complex types is not supported yet.");
@@ -170,12 +176,12 @@ namespace Geo.Rest.Business.Services
                 throw new PropertyNotMappedException($"The property '{propertyName} is not mapped.'");
             }
 
-            var originalExpression = entityPropertyMap.CustomMapExpression;            
+            var originalExpression = entityPropertyMap.CustomMapExpression;
 
             var expression = Expression.Convert(originalExpression.Body, typeof(object));
             var parameterExpression = originalExpression.Parameters.First();
 
-            return (expression, parameterExpression);            
+            return (expression, parameterExpression);
         }
     }
 }
