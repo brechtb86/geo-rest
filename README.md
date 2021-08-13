@@ -16,15 +16,19 @@ https://geo-service.rest/api/v1/countries
 
 https://geo-service.rest/api/v1/countries/{countryId}
 
-https://geo-service.rest/api/v1/countries/{twoLetterIsoCode}
+https://geo-service.rest/api/v1/countries/{countryCode}
 
 https://geo-service.rest/api/v1/countries/{countryId}/states
 
-https://geo-service.rest/api/v1/countries/{twoLetterIsoCode}/states
+https://geo-service.rest/api/v1/countries/{countryCode}/states
+
+https://geo-service.rest/api/v1/countries/{countryId}/states/{stateId}/cities
+
+https://geo-service.rest/api/v1/countries/{countryCode}/states/{stateCode}/cities
 
 https://geo-service.rest/api/v1/countries/{countryId}/cities
 
-https://geo-service.rest/api/v1/countries/{twoLetterIsoCode}/cities
+https://geo-service.rest/api/v1/countries/{countryCode}/cities
 
 ## Docs & tryout
 

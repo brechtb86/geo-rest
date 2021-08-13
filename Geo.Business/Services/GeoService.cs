@@ -154,6 +154,40 @@ namespace Geo.Rest.Business.Services
             return this._mapper.Map<WrappedCollection<City>>(result);
         }
 
+        public async Task<WrappedCollection<City>> GetCitiesByCountryAndStateAsync(int countryId, int stateId, CollectionQueryParameters parameters)
+        {
+            this.SetCurrentCulture(parameters);
+
+            var cityEntities = this._geoContext.Cities
+                .Where(state => state.CountryId == countryId && state.Id == stateId)
+                .AsQueryable();
+
+            cityEntities = this.TryFilter(cityEntities, parameters);
+
+            cityEntities = this.TrySortBy(cityEntities, parameters);
+
+            var result = await cityEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize);
+
+            return this._mapper.Map<WrappedCollection<City>>(result);
+        }
+
+        public async Task<WrappedCollection<City>> GetCitiesByCountryAndStateAsync(string countryCode, string stateCode, CollectionQueryParameters parameters)
+        {
+            this.SetCurrentCulture(parameters);
+
+            var cityEntities = this._geoContext.Cities
+                .Where(state => state.CountryCode == countryCode && state.StateCode == stateCode)
+                .AsQueryable();
+
+            cityEntities = this.TryFilter(cityEntities, parameters);
+
+            cityEntities = this.TrySortBy(cityEntities, parameters);
+
+            var result = await cityEntities.ToWrappedCollectionAsync(parameters.Page, parameters.PageSize);
+
+            return this._mapper.Map<WrappedCollection<City>>(result);
+        }
+
         public string GenerateExportScript(string databaseName = "Geo")
         {
             databaseName = databaseName.Trim().Replace(" ", "_");

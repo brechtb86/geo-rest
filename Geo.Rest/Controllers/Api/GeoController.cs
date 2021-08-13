@@ -54,17 +54,17 @@ namespace Geo.Rest.Controllers.Api
             return this.Ok(dynamicCountry);
         }
 
-        [HttpGet("countries/{twoLetterIsoCode}")]
+        [HttpGet("countries/{countryCode}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Country), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, [FromQuery] QueryParameters parameters)
+        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string countryCode, [FromQuery] QueryParameters parameters)
         {
-            var country = await _geoService.GetCountryByTwoLetterIsoCodeAsync(twoLetterIsoCode, parameters);
+            var country = await _geoService.GetCountryByTwoLetterIsoCodeAsync(countryCode, parameters);
 
             if (country == null)
             {
-                return this.NotFound($"The requested endpoint is correct but a country with two letter isocode '{twoLetterIsoCode}' cannot be found");
+                return this.NotFound($"The requested endpoint is correct but a country with two letter iso code '{countryCode}' cannot be found");
             }
 
             var dynamicCountry = country.SelectFields(parameters.FieldsList);
@@ -80,9 +80,9 @@ namespace Geo.Rest.Controllers.Api
         {
             var states = await _geoService.GetStatesByCountryAsync(countryId, parameters);
             
-            var dynamiStates = states.SelectFields(parameters.FieldsList);
+            var dynamicStates = states.SelectFields(parameters.FieldsList);
 
-            return this.Ok(dynamiStates);
+            return this.Ok(dynamicStates);
         }
 
         [HttpGet("countries/{countryCode}/states")]
@@ -93,9 +93,35 @@ namespace Geo.Rest.Controllers.Api
         {
             var states = await _geoService.GetStatesByCountryAsync(countryCode, parameters);
 
-            var dynamiStates = states.SelectFields(parameters.FieldsList);
+            var dynamicStates = states.SelectFields(parameters.FieldsList);
 
-            return this.Ok(dynamiStates);
+            return this.Ok(dynamicStates);
+        }
+
+        [HttpGet("countries/{countryId:int}/states/{stateId:int}/cities")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(WrappedCollection<City>), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetCitiesByCountryAndStateAsync(int countryId, int stateId, [FromQuery] CollectionQueryParameters parameters)
+        {
+            var cities = await _geoService.GetCitiesByCountryAndStateAsync(countryId, stateId, parameters);
+
+            var dynamicCities = cities.SelectFields(parameters.FieldsList);
+
+            return this.Ok(dynamicCities);
+        }
+
+        [HttpGet("countries/{countryCode}/states/{stateCode}/cities")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(WrappedCollection<City>), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetCitiesByCountryAndStateAsync(string countryCode, string stateCode, int stateId, [FromQuery] CollectionQueryParameters parameters)
+        {
+            var cities = await _geoService.GetCitiesByCountryAndStateAsync(countryCode, stateCode, parameters);
+
+            var dynamicCities = cities.SelectFields(parameters.FieldsList);
+
+            return this.Ok(dynamicCities);
         }
 
         [HttpGet("countries/{countryId:int}/cities")]
@@ -123,38 +149,5 @@ namespace Geo.Rest.Controllers.Api
 
             return this.Ok(dynamicCities);
         }
-
-        //[HttpGet("states")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(PagedCollection<State>), 200)]
-        //[ProducesResponseType(404)]
-        //public async Task<IActionResult> GetStatesAsync([FromQuery] CollectionQueryParameters parameters)
-        //{
-        //    var states = await this._geoService.GetStatesAsync(parameters);
-
-        //    return this.Ok(states);
-        //}
-
-        //[HttpGet("states/{id:int}")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(State), 200)]
-        //[ProducesResponseType(404)]
-        //public async Task<IActionResult> GetStateByIdAsync(int id)
-        //{
-        //    var state = await this._geoService.GetStateByIdAsync(id);
-
-        //    return this.Ok(state);
-        //}
-
-        //[HttpGet("countries/{countryId:int}/states")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(ICollection<State>), 200)]
-        //[ProducesResponseType(404)]
-        //public async Task<IActionResult> GetStatesByCountryIdAsync(int countryId)
-        //{
-        //    var states = await this._geoService.GetStatesByCountryIdAsync(countryId);
-
-        //    return this.Ok(states);
-        //}
     }
 }

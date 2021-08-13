@@ -25,6 +25,10 @@ namespace Geo.Rest.Business.Services.Interfaces
 
         Task<WrappedCollection<City>> GetCitiesByCountryAsync(string countryCode, CollectionQueryParameters parameters);
 
+        Task<WrappedCollection<City>> GetCitiesByCountryAndStateAsync(int countryId, int stateId, CollectionQueryParameters parameters);
+
+        Task<WrappedCollection<City>> GetCitiesByCountryAndStateAsync(string countryCode, string stateCode, CollectionQueryParameters parameters);
+
         //Task<ICollection<State>> GetStatesByCountryIdAsync(int countryId);
 
         string GenerateExportScript(string databaseName = "Geo");
