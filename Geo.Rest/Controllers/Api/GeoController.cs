@@ -115,7 +115,7 @@ namespace Geo.Rest.Controllers.Api
         [Produces("application/json")]
         [ProducesResponseType(typeof(WrappedCollection<City>), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCitiesByCountryAndStateAsync(string countryCode, string stateCode, int stateId, [FromQuery] CollectionQueryParameters parameters)
+        public async Task<IActionResult> GetCitiesByCountryAndStateAsync(string countryCode, string stateCode, [FromQuery] CollectionQueryParameters parameters)
         {
             var cities = await _geoService.GetCitiesByCountryAndStateAsync(countryCode, stateCode, parameters);
 
