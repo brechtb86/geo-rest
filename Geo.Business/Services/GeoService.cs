@@ -67,14 +67,14 @@ namespace Geo.Rest.Business.Services
             return this._mapper.Map<Country>(result);
         }
 
-        public async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode, QueryParameters parameters)
+        public async Task<Country> GetCountryByCodeAsync(string countryCode, QueryParameters parameters)
         {
             this.SetCurrentCulture(parameters);
 
             var countryEntity = await this._geoContext.Countries
                 .Include(country => country.CountryTimeZones)
                 .Include(country => country.CountryNameTranslations)
-                .FirstOrDefaultAsync(country => country.TwoLetterIsoCode.ToLower() == twoLetterIsoCode.ToLower());
+                .FirstOrDefaultAsync(country => country.TwoLetterIsoCode.ToLower() ==  countryCode.ToLower());
 
             if (countryEntity == null)
             {
@@ -142,7 +142,7 @@ namespace Geo.Rest.Business.Services
             this.SetCurrentCulture(parameters);
 
             var cityEntities = this._geoContext.Cities
-                .Where(state => state.CountryCode == countryCode)
+                .Where(state => state.CountryCode.ToLower() == countryCode.ToLower())
                 .AsQueryable();
 
             cityEntities = this.TryFilter(cityEntities, parameters);
@@ -176,7 +176,7 @@ namespace Geo.Rest.Business.Services
             this.SetCurrentCulture(parameters);
 
             var cityEntities = this._geoContext.Cities
-                .Where(state => state.CountryCode == countryCode && state.StateCode == stateCode)
+                .Where(city => city.CountryCode.ToLower() == countryCode.ToLower() && city.StateCode.ToLower() == stateCode.ToLower())
                 .AsQueryable();
 
             cityEntities = this.TryFilter(cityEntities, parameters);

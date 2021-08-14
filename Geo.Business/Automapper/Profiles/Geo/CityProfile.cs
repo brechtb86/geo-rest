@@ -25,6 +25,8 @@ namespace Geo.Rest.Business.Automapper.Profiles.Geo
                 .ForMember(dest => dest.CreatedAt, opts => opts.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.UpdatedAt, opts => opts.MapFrom(src => src.UpdatedAt))
                 // End base members
+                .ForMember(dest => dest.CountryCode, opts => opts.MapFrom(src => src.CountryCode))
+                .ForMember(dest => dest.StateCode, opts => opts.MapFrom(src => src.StateCode))
                 ;
         }
     }

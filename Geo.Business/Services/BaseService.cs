@@ -115,7 +115,7 @@ namespace Geo.Rest.Business.Services
 
                     var filterPropertyThenBy = Expression.Lambda<Func<TEntity, int>>(Expression.Property(filterPropertyExpressionToLower, "Length"), filterParameterExpression); ;
 
-                    entities = entities.Where(filterPropertyWhere.Compile()).AsQueryable().OrderBy(filterPropertyOrderBy).ThenBy(filterPropertyThenBy);
+                    entities = entities.AsEnumerable().Where(filterPropertyWhere.Compile()).AsQueryable().OrderBy(filterPropertyOrderBy).ThenBy(filterPropertyThenBy);
                 }
                 catch (NotImplementedException notImplementedException)
                 {
@@ -158,7 +158,7 @@ namespace Geo.Rest.Business.Services
 
             if (property == null)
             {
-                throw new PropertyDoesNotExistException($"The propery '{propertyName}' was not found.");
+                throw new PropertyDoesNotExistException($"The property '{propertyName}' was not found.");
             }
 
             if (!property.PropertyType.IsSimpleType())

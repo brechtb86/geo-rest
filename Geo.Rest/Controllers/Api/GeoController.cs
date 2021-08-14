@@ -58,9 +58,9 @@ namespace Geo.Rest.Controllers.Api
         [Produces("application/json")]
         [ProducesResponseType(typeof(Country), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCountryByTwoLetterIsoCodeAsync(string countryCode, [FromQuery] QueryParameters parameters)
+        public async Task<IActionResult> GetCountryByCodeAsync(string countryCode, [FromQuery] QueryParameters parameters)
         {
-            var country = await _geoService.GetCountryByTwoLetterIsoCodeAsync(countryCode, parameters);
+            var country = await _geoService.GetCountryByCodeAsync(countryCode, parameters);
 
             if (country == null)
             {
